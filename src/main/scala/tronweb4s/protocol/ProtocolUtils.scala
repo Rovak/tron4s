@@ -1,8 +1,9 @@
-package tronweb4s
-package protocol
+package tronweb4s.protocol
 
 import org.tron.protos.Contract._
 import org.tron.protos.Tron.Transaction
+import tronweb4s.Base58Address
+import tronweb4s.Implicits._
 
 object ProtocolUtils {
 
