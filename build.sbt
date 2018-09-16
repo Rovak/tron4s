@@ -48,25 +48,27 @@ lazy val root = (project in file(".")).
 
       "io.lemonlabs" %% "scala-uri" % "1.1.1",
 
-      "org.ocpsoft.prettytime" % "prettytime" % "4.0.1.Final"
+      "org.ocpsoft.prettytime" % "prettytime" % "4.0.1.Final",
+      "com.lihaoyi" % "ammonite" % "1.2.1" % "test" cross CrossVersion.full
 
       ) ++ grpcDeps ++ akkaDeps ++ circeDependencies ++ catsDeps,
 
-    scalacOptions in Test ++= Seq("-Yrangepos")
-  )
+    scalacOptions in Test ++= Seq("-Yrangepos"),
+
+
+    // Adds additional packages into Twirl
+    //TwirlKeys.templateImports += "org.tronscan.controllers._"
+
+    // Adds additional packages into conf/routes
+    // play.sbt.routes.RoutesKeys.routesImport += "org.tronscan.binders._"
+
+    PB.protoSources in Compile := Seq(file("src/protobuf"), file("target/protobuf_external/google/api")),
+
+    PB.includePaths in Compile := Seq(file("src/protobuf"), file("target/protobuf_external")),
+
+    PB.targets in Compile := Seq(
+      scalapb.gen() -> (sourceManaged in Compile).value
+    )
+)
 
 scalacOptions += "-Ypartial-unification"
-
-// Adds additional packages into Twirl
-//TwirlKeys.templateImports += "org.tronscan.controllers._"
-
-// Adds additional packages into conf/routes
-// play.sbt.routes.RoutesKeys.routesImport += "org.tronscan.binders._"
-
-PB.protoSources in Compile := Seq(file("app/protobuf"), file("target/protobuf_external/google/api"))
-
-PB.includePaths in Compile := Seq(file("app/protobuf"), file("target/protobuf_external"))
-
-PB.targets in Compile := Seq(
-  scalapb.gen() -> (sourceManaged in Compile).value
-)

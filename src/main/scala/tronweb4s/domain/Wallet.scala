@@ -1,5 +1,8 @@
 package tronweb4s.domain
 
-
-
-case class Wallet(privateKey: String, address: String)
+/**
+  * Wallet
+  */
+case class Wallet(privateKey: PrivateKey) extends HasAddress {
+  def address = privateKey.address
+}
