@@ -73,15 +73,6 @@ object ProtocolUtils {
       case TriggerSmartContract =>
         org.tron.protos.Contract.TriggerSmartContract.parseFrom(any.value.toByteArray)
 
-//      case BuyStorageBytesContract =>
-//        org.tron.protos.Contract.BuyStorageBytesContract.parseFrom(any.value.toByteArray)
-
-//      case BuyStorageContract =>
-//        org.tron.protos.Contract.BuyStorageContract.parseFrom(any.value.toByteArray)
-
-//      case SellStorageContract =>
-//        org.tron.protos.Contract.SellStorageContract.parseFrom(any.value.toByteArray)
-
       case ExchangeCreateContract =>
         org.tron.protos.Contract.ExchangeCreateContract.parseFrom(any.value.toByteArray)
 

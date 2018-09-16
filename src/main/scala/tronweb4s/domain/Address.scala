@@ -1,6 +1,6 @@
 package tronweb4s.domain
 
-import tronweb4s.Types.AddressStr
+import tronweb4s.AddressStr
 
 trait HasAddress {
   def address: AddressStr
