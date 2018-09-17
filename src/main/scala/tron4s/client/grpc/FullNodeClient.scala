@@ -1,22 +1,24 @@
-package tronweb4s.client.grpc
+package tron4s.client.grpc
 
-import org.tron.api.api.WalletSolidityGrpc.WalletSolidityStub
+import org.tron.api.api.WalletGrpc.WalletStub
 import org.tron.api.api.{EmptyMessage, NumberMessage}
 import org.tron.protos.Tron.Block
-import tronweb4s.domain.BlockChain
+import tron4s.domain.BlockChain
 
 import scala.concurrent.{ExecutionContext, Future}
 
-trait SolidityClient {
-  def client: WalletSolidityStub
+trait FullNodeClient {
+  def client: WalletStub
 }
 
-class SolidityBlockChain(val client: WalletSolidityStub) extends BlockChain with SolidityClient {
+/**
+  * Full Node Blockchain
+  */
+class FullNodeBlockChain(val client: WalletStub) extends BlockChain with FullNodeClient {
 
   def genesisBlock(implicit executionContext: ExecutionContext): Future[Block] = {
-    client.getBlockByNum(NumberMessage(0))
+    client.getBlockByNum(NumberMessage(num = 0))
   }
-
 
   def headBlock(implicit executionContext: ExecutionContext): Future[Block] = {
     client.getNowBlock(EmptyMessage())

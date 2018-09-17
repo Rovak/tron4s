@@ -20,7 +20,7 @@ package org.tron.common.crypto;
 
 import org.tron.common.crypto.cryptohash.Keccak256;
 import org.tron.common.crypto.cryptohash.Keccak512;
-import tronweb4s.utils.StaticAddressFormatter;
+import tron4s.utils.StaticAddressFormatter;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;

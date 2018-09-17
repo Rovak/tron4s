@@ -1,4 +1,4 @@
-package tronweb4s.client.grpc
+package tron4s.client.grpc
 
 import java.util.concurrent.TimeUnit
 
@@ -9,8 +9,8 @@ import javax.inject.Inject
 import org.tron.api.api.WalletGrpc.WalletStub
 import org.tron.api.api.{EmptyMessage, WalletGrpc}
 import play.api.inject.ConfigurationProvider
-import tronweb4s.Implicits._
-import tronweb4s.domain.NodeAddress
+import tron4s.Implicits._
+import tron4s.domain.NodeAddress
 
 import scala.collection.JavaConverters._
 import scala.concurrent.Future

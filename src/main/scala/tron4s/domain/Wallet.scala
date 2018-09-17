@@ -1,4 +1,4 @@
-package tronweb4s.domain
+package tron4s.domain
 
 /**
   * Wallet

@@ -1,4 +1,4 @@
-package tronweb4s.client.grpc
+package tron4s.client.grpc
 
 import akka.actor.ActorRef
 import akka.pattern.ask

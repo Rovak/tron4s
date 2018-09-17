@@ -1,7 +1,7 @@
-package tronweb4s.network
+package tron4s.network
 
 import org.joda.time.DateTime
-import tronweb4s.domain.Node.NodeType
+import tron4s.domain.Node.NodeType
 
 case class Node(ip: String, port: Int, nodeType: NodeType)
 case class GRPCState(active: Boolean, responseTime: Long)

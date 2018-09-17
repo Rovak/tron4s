@@ -1,4 +1,4 @@
-package tronweb4s.domain
+package tron4s.domain
 
 import org.tron.common.crypto.ECKey
 import org.tron.common.utils.{Base58, ByteArray}

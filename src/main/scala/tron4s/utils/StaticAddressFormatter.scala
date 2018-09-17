@@ -1,4 +1,4 @@
-package tronweb4s.utils
+package tron4s.utils
 
 object StaticAddressFormatter {
   var formatter: AddressFormatter = new MainNetFormatter

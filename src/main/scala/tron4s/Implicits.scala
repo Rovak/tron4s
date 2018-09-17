@@ -1,4 +1,4 @@
-package tronweb4s
+package tron4s
 
 import akka.NotUsed
 import akka.stream.scaladsl.{Flow, Sink}
@@ -6,7 +6,7 @@ import com.google.protobuf.ByteString
 import org.tron.common.BlockId
 import org.tron.common.utils.{Base58, ByteArray, Sha256Hash}
 import org.tron.protos.Tron.{Account, Block, Transaction}
-import tronweb4s.protocol.ProtocolUtils
+import tron4s.protocol.ProtocolUtils
 
 object Implicits {
 
