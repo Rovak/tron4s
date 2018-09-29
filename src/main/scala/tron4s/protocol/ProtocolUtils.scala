@@ -91,6 +91,9 @@ object ProtocolUtils {
   }
 
 
+  /**
+    * Reads the owner address of the contract
+    */
   def getOwnerAddress(contract: Transaction.Contract): Base58Address = {
 
     toContractModel(contract) match {
@@ -180,6 +183,9 @@ object ProtocolUtils {
     }
   }
 
+  /**
+    * Reads the optional receiver address
+    */
   def getReceiverAddress(contract: Transaction.Contract): Option[Base58Address] = {
 
     toContractModel(contract) match {
@@ -200,6 +206,9 @@ object ProtocolUtils {
     }
   }
 
+  /**
+    * Retrieve the addreses which are present in the given contract* @return
+    */
   def getAddresses(contract: Transaction.Contract): List[Base58Address] = {
     List(getOwnerAddress(contract)) ++ getReceiverAddress(contract).map(List(_)).getOrElse(List.empty)
   }
