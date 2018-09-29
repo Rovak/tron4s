@@ -1,28 +1,23 @@
 package tron4s.network
 
 import org.joda.time.DateTime
-import tron4s.domain.Node.NodeType
+import tron4s.domain.Node.{Full, NodeType}
 
 case class Node(ip: String, port: Int, nodeType: NodeType)
-case class GRPCState(active: Boolean, responseTime: Long)
-case class HttpState(active: Boolean, responseTime: Long, url: String)
-case class PingState(active: Boolean, responseTime: Long)
+case class GRPCState(active: Boolean = false, responseTime: Long = -1L)
+case class HttpState(active: Boolean = false, responseTime: Long = -1L, url: String = "")
+case class PingState(active: Boolean = false, responseTime: Long = -1L)
 
 case class NetworkNode(
   ip: String,
   port: Int,
-  nodeType: Int,
+  nodeType: NodeType = Full,
   hostname: String = "",
   lastSeen: DateTime = DateTime.now,
-  permanent: Boolean = false,
   lastBlock: Long = 0L,
-  grpcEnabled: Boolean = false,
-  grpcResponseTime: Long = 0,
-  pingOnline: Boolean = false,
-  pingResponseTime: Long = 0,
-  httpEnabled: Boolean = false,
-  httpResponseTime: Long = 0,
-  httpUrl: String = "",
+  grpc: GRPCState = GRPCState(),
+  http: HttpState = HttpState(),
+  ping: PingState = PingState(),
   country: String = "",
   city: String = "",
   lat: Double = 0,

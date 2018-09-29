@@ -6,7 +6,8 @@ object Dependencies {
 
 
   val circeVersion = "0.9.3"
-  val slickPgVersion = "0.16.1"
+  val slickPgVersion = "0.16.3"
+  val slickVersion = "3.2.3"
   val monixVersion = "2.3.0"
   val akkaVersion = "2.5.16"
   val catsVersion = "1.3.1"
@@ -31,6 +32,17 @@ object Dependencies {
     "com.typesafe.akka" %% "akka-cluster",
     "com.typesafe.akka" %% "akka-cluster-tools"
   ).map(_ % akkaVersion)
+
+  val slickPgDeps = Seq(
+    "com.github.tminglei" %% "slick-pg",
+    "com.github.tminglei" %% "slick-pg_play-json",
+    "com.github.tminglei" %% "slick-pg_circe-json",
+    "com.github.tminglei" %% "slick-pg_joda-time"
+  ).map(_ % slickPgVersion)
+
+  val slickDeps = Seq(
+    "com.typesafe.slick" %% "slick"
+  ).map(_ % slickVersion)
 
   val catsDeps = Seq(
     "org.typelevel" %% "cats-core" % catsVersion,

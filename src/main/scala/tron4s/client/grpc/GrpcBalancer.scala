@@ -4,6 +4,7 @@ import java.util.concurrent.TimeUnit
 
 import akka.actor.{Actor, ActorRef, Cancellable, Props, Terminated}
 import akka.routing.{ActorRefRoutee, RoundRobinRoutingLogic, Router}
+import com.typesafe.config.Config
 import io.grpc.ManagedChannelBuilder
 import javax.inject.Inject
 import org.tron.api.api.WalletGrpc.WalletStub
@@ -44,16 +45,14 @@ object GrpcBalancerOptions {
   * Manages the seedNodes and periodically checks which nodes are the fastest
   * The fastest nodes will be used to handle GRPC calls
   */
-class GrpcBalancer @Inject() (configurationProvider: ConfigurationProvider) extends Actor {
+class GrpcBalancer @Inject() (config: Config) extends Actor {
 
-  val config = configurationProvider.get
-
-  val seedNodes = config.underlying.getStringList("fullnode.list").asScala.map { uri =>
+  val seedNodes = config.getStringList("fullnode.list").asScala.map { uri =>
     val Array(ip, port) = uri.split(":")
     NodeAddress(ip, port.toInt)
   }.toList
 
-  val maxClients = config.get[Int]("grpc.balancer.maxClients")
+  val maxClients = config.getInt("grpc.balancer.maxClients")
 
   // Contains the stats of all the seednodes
   var nodeStatuses = Map[String, GrpcStats]()

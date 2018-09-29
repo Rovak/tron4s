@@ -9,8 +9,9 @@ trait Command {
 
   def execute(args: AppCmd): Unit
 
-
   def clear() = print("\033[2J")
+
+  def write(msg: String) = println(msg)
 
   def ask(question: String) = {
     print(question + ": ")

@@ -6,10 +6,10 @@ enablePlugins(JavaAppPackaging)
 
 lazy val root = (project in file(".")).
   settings(
-    mainClass in assembly := Some("tron4s.cli.App"),
+    mainClass in assembly := Some("tron4s.cli.AppCli"),
     assemblyJarName in assembly := "tron4s.jar",
     inThisBuild(List(
-      organization := "com.tronweb",
+      organization := "tron4s",
       scalaVersion := "2.12.7",
       version      := "0.1.0-SNAPSHOT"
     )),
@@ -63,9 +63,23 @@ lazy val root = (project in file(".")).
 
       "io.github.novacrypto" % "BIP32" % "0.0.9",
 
-      "org.bitcoinj" % "bitcoinj-core" % "0.14.7"
+      "org.bitcoinj" % "bitcoinj-core" % "0.14.7",
 
-      ) ++ grpcDeps ++ akkaDeps ++ circeDependencies ++ catsDeps,
+      "com.google.inject" % "guice" % "4.2.1",
+      "com.typesafe.play" %% "play-ahc-ws-standalone" % "2.0.0-M4",
+      "com.typesafe.play" %% "play-ws-standalone-json" % "2.0.0-M4",
+
+      "com.typesafe" % "config" % "1.3.2",
+
+      "de.vandermeer" % "asciitable" % "0.3.2"
+
+    ) ++
+      grpcDeps ++
+      akkaDeps ++
+      circeDependencies ++
+      catsDeps ++
+      slickPgDeps ++
+      slickDeps,
 
     scalacOptions in Test ++= Seq("-Yrangepos"),
 
