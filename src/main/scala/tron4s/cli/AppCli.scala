@@ -1,5 +1,7 @@
 package tron4s.cli
 
+import java.util.Calendar
+
 import com.google.inject.Guice
 import tron4s.Module
 import tron4s.cli.commands.{CreateTransferCmd, CurrentRoundCmd, ScanNodesCmd, VoteRoundCmd}
@@ -23,13 +25,12 @@ object AppCli {
       cmd("votes").action((_, c) => c.copy(cmd = Some(VoteRoundCmd())))
         .text("get votes")
 
-      cmd("new_transaction").action((_, c) => c.copy(cmd = Some(CreateTransferCmd())))
+      cmd("new_transaction").action((_, c) => c.copy(cmd = Some(CreateTransferCmd(app))))
         .text("build a transaction")
 
       cmd("scan_nodes").action((_, c) => c.copy(cmd = Some(ScanNodesCmd(app))))
         .text("scan network nodes")
     }
-
 
     parser.parse(args, AppCmd()).foreach { config =>
       config.cmd.foreach(_.execute(config))

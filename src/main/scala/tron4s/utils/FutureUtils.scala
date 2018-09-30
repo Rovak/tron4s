@@ -15,4 +15,13 @@ object FutureUtils {
         after(nextBackof.milliseconds, s)(retry(nextBackof.milliseconds, maxBackoff, randomFactor)(f))
     }
   }
+
+  def loop[T](func: () => Future[(T, Boolean)])(implicit executionContext: ExecutionContext): Future[T] = {
+    Future.unit.flatMap(_ => func()) flatMap {
+      case (_, true)  =>
+        loop(func)
+      case (result, false) =>
+        Future.successful(result)
+    }
+  }
 }

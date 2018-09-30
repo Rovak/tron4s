@@ -84,7 +84,7 @@ class Module extends AbstractModule {
   @Provides
   @Singleton
   @Inject
-  def buildGrpcClient(/*configurationProvider: ConfigurationProvider*/): Wallet = {
+  def buildGrpcClient(/*configurationProvider: ConfigurationProvider*/): WalletGrpc.Wallet = {
     val channel = ManagedChannelBuilder
       .forAddress("54.236.37.243", 50051)
       .usePlaintext(true)
