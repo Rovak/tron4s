@@ -2,12 +2,15 @@ package tron4s.cli.commands
 
 import tron4s.cli.AppCmd
 
+import scala.concurrent.{ExecutionContext, Future}
 import scala.io.StdIn
 import scala.util.{Success, Try}
 
 trait Command {
 
-  def execute(args: AppCmd): Unit
+  implicit val executionContext = ExecutionContext.Implicits.global
+
+  def execute(args: AppCmd): Future[Unit]
 
   def clear() = print("\033[2J")
 

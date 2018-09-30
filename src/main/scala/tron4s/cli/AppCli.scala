@@ -2,9 +2,11 @@ package tron4s.cli
 
 import java.util.Calendar
 
+import scala.async.Async._
+import tron4s.Implicits._
 import com.google.inject.Guice
 import tron4s.Module
-import tron4s.cli.commands.{CreateTransferCmd, CurrentRoundCmd, ScanNodesCmd, VoteRoundCmd}
+import tron4s.cli.commands._
 
 object AppCli {
 
@@ -17,23 +19,48 @@ object AppCli {
     val app = tron4s.App(buildInjector)
 
     val parser = new scopt.OptionParser[AppCmd]("tron4s") {
+
       head("TRON 4 Scala", "0.1")
 
-      cmd("round").action((_, c) => c.copy(cmd = Some(CurrentRoundCmd())))
+      cmd("vote_round")
+        .action((_, c) => c.copy(cmd = Some(CurrentRoundCmd())))
         .text("get current round")
 
-      cmd("votes").action((_, c) => c.copy(cmd = Some(VoteRoundCmd())))
+      cmd("votes")
+        .action((_, c) => c.copy(cmd = Some(VoteRoundCmd())))
         .text("get votes")
 
-      cmd("new_transaction").action((_, c) => c.copy(cmd = Some(CreateTransferCmd(app))))
-        .text("build a transaction")
+      cmd("send_trx")
+        .action((_, c) => c.copy(cmd = Some(CreateTransferCmd(app))))
+        .text("Send a transaction")
 
-      cmd("scan_nodes").action((_, c) => c.copy(cmd = Some(ScanNodesCmd(app))))
-        .text("scan network nodes")
+      cmd("scan_nodes")
+        .action((_, c) => c.copy(cmd = Some(ScanNodesCmd(app))))
+        .text("Scan network nodes")
+
+      cmd("sync")
+        .action((_, c) => c.copy(cmd = Some(ImportCmd(app))))
+        .text("Synchronize Blockchain")
+        .children(
+          cmd("verify")
+            .text("Verifies if the database is complete")
+            .action((_, c) => c.copy(cmd = Some(VerifyDatabaseCmd(app))))
+        )
+
+      cmd("database")
+        .text("Database actions")
+        .children(
+          cmd("reset")
+            .text("Resets the database")
+            .action((_, c) => c.copy(cmd = Some(ResetDatabaseCmd(app))))
+        )
     }
 
-    parser.parse(args, AppCmd()).foreach { config =>
-      config.cmd.foreach(_.execute(config))
+    for {
+      config <- parser.parse(args, AppCmd())
+      cmd <- config.cmd
+    } {
+      runSync(cmd.execute(config))
     }
   }
 

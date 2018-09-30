@@ -16,7 +16,7 @@ lazy val root = (project in file(".")).
     name := "tronweb4s",
 
     libraryDependencies ++= Seq(
-      scalaTest % Test,
+//      scalaTest % Test,
       specs2 % Test,
       "com.google.protobuf" % "protobuf-java" % "3.4.0" % "protobuf",
       "com.google.api.grpc" % "googleapis-common-protos" % "0.0.3" % "protobuf",
@@ -33,9 +33,8 @@ lazy val root = (project in file(".")).
       "com.madgag.spongycastle" % "core" % "1.53.0.0",
       "com.madgag.spongycastle" % "prov" % "1.53.0.0",
       //  "com.google.guava" % "guava" % "18.0",
-      "org.iq80.leveldb" % "leveldb" % "0.10",
-      "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
-      "org.apache.commons" % "commons-collections4" % "4.0",
+//      "org.iq80.leveldb" % "leveldb" % "0.10",
+//      "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
       "com.typesafe" % "config" % "1.3.2",
       //  "com.google.code.findbugs" % "jsr305" % "3.0.0",
       "com.cedarsoftware" % "java-util" % "1.8.0",
@@ -50,7 +49,7 @@ lazy val root = (project in file(".")).
       "com.typesafe.play" %% "play-json-joda" % "2.6.9",
 
       "io.monix" %% "monix" % "3.0.0-RC1",
-      "org.jsoup" % "jsoup" % "1.11.3",
+//      "org.jsoup" % "jsoup" % "1.11.3",
       "io.lemonlabs" %% "scala-uri" % "1.1.1",
 
       "org.ocpsoft.prettytime" % "prettytime" % "4.0.1.Final",

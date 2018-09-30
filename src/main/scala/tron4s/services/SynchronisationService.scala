@@ -14,10 +14,9 @@ class SynchronisationService @Inject() (
   walletClient: WalletClient,
   blockModelRepository: BlockModelRepository,
   accountModelRepository: AccountModelRepository,
-  addressBalanceModelRepository: AddressBalanceModelRepository,
-  configurationProvider: ConfigurationProvider) {
+  addressBalanceModelRepository: AddressBalanceModelRepository) {
 
-  val syncSolidity = configurationProvider.get.get[Boolean]("sync.solidity")
+  val syncSolidity = false //configurationProvider.get.get[Boolean]("sync.solidity")
 
   /**
     * Reset all the blockchain data in the database

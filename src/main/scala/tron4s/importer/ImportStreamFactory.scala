@@ -156,7 +156,7 @@ class ImportStreamFactory @Inject()(
       /***** Channels *****/
 
       // Pass block witness addresses to address stream
-      blocks.map(_.witness).filter(_.length == 34).map(Address) ~> addresses
+      blocks.map(_.witness).filter(_.length == 34).map(Address(_)) ~> addresses
 
       // Transactions
       blocks.mapConcat(b => b.transactions.map(t => (b, t)).toList) ~> transactions.in
@@ -165,7 +165,7 @@ class ImportStreamFactory @Inject()(
       transactions.mapConcat { case (block, t) => t.getRawData.contract.map(c => (block, t, c)).toList } ~> contracts.in
 
       // Read addresses from contracts
-      contracts.mapConcat(_._3.addresses.map(Address)) ~> addresses
+      contracts.mapConcat(_._3.addresses).filter(_.length == 34).map(Address(_)) ~> addresses
 
       /** Importers **/
 
@@ -217,7 +217,10 @@ class ImportStreamFactory @Inject()(
   def buildBlockSource(walletClient: WalletClient)(implicit context: ExecutionContext) = {
     Flow[NodeState]
       .mapAsync(1) { status =>
+        println("reading wallet")
         walletClient.full.map { walletFull =>
+          println("go full")
+
           val fullNodeBlockChain = new FullNodeBlockChain(walletFull)
           val fromBlock = if (status.dbLatestBlock <= 0) 0 else status.dbLatestBlock + 1
           val toBlock = status.fullNodeBlock - 1

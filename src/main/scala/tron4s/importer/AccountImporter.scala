@@ -34,7 +34,7 @@ class AccountImporter @Inject() (
       }
     }
     .mapConcat(x => x.toList)
-    .map(Address)
+    .map(Address(_))
   }
 
   /**

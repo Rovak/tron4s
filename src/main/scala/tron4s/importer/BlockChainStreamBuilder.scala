@@ -2,6 +2,7 @@ package tron4s.importer
 
 import akka.NotUsed
 import akka.event.EventStream
+import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
 import org.tron.api.api.WalletGrpc.WalletStub
 import org.tron.api.api.WalletSolidityGrpc.WalletSolidityStub
@@ -52,25 +53,14 @@ class BlockChainStreamBuilder {
         None
       }
     }
-    .mapAsync(1) { case (fromBlock, toBlock) =>
+    .mapAsync(12) { case (fromBlock, toBlock) =>
       val range = BlockLimit(fromBlock, toBlock + 1)
       client.fullRequest(_.getBlockByLimitNext(range)).map { blocks =>
-        val bs = blocks.block.sortBy(_.getBlockHeader.getRawData.number)
-//        if (range.startNum != bs.head.getBlockHeader.getRawData.number) {
-//          Logger.warn(s"WRONG START BLOCK: ${range.startNum} => ${bs.head.getBlockHeader.getRawData.number}")
-//        }
-//        if (range.endNum - 1 != bs.last.getBlockHeader.getRawData.number) {
-//          Logger.warn(s"WRONG END BLOCK: ${range.endNum} => ${bs.last.getBlockHeader.getRawData.number}")
-//        }
-//        Logger.info(s"DOWNLOADED $fromBlock to $toBlock. GOT ${bs.headOption.map(_.getBlockHeader.getRawData.number)} => ${bs.lastOption.map(_.getBlockHeader.getRawData.number)}")
-        bs
+        blocks.block.sortBy(_.getBlockHeader.getRawData.number)
       }
     }
     .mapConcat(x => x.toList)
-    .map { block =>
-      Logger.info("Block: " + block.getBlockHeader.getRawData.number)
-      block
-    }
+    .buffer(10000, OverflowStrategy.backpressure)
   }
 
   def filterContracts(contractTypes: List[Transaction.Contract.ContractType]) = {

@@ -41,7 +41,7 @@ class BlockImporter @Inject() (
         val header = block.getBlockHeader.getRawData
         val queries: ListBuffer[FixedSqlAction[_, NoStream, Effect.Write]] = ListBuffer()
 
-        if (header.number % 1000 == 0) {
+        if (header.number % 10000 == 0) {
           Logger.info(s"FULL NODE BLOCK: ${header.number}, TX: ${block.transactions.size}, CONFIRM: $confirmBlocks")
         }
 

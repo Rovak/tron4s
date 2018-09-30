@@ -16,9 +16,7 @@ import scala.async.Async._
 
 case class CreateTransferCmd(app: tron4s.App) extends Command {
 
-  import scala.concurrent.ExecutionContext.Implicits.global
-
-  override def execute(args: AppCmd): Unit = {
+  override def execute(args: AppCmd) = async {
 
     for {
       privateKey <- ask("Key")

@@ -28,25 +28,23 @@ class FullNodeImporter @Inject()(
     * 5. `synchronisationChecker`: verifies if the synchranisation should start
     * 6. `blockSource`: Builds the source from which the blocks will be read from the blockchain
     */
-  def buildStream(implicit actorSystem: ActorSystem) = {
-    async {
-      val nodeState = await(synchronisationService.nodeState)
-//      Logger.info("BuildStream::nodeState -> " + nodeState)
-      val importAction = await(importStreamFactory.buildImportActionFromImportStatus(nodeState))
-//      Logger.info("BuildStream::importAction -> " + importAction)
-      val importers = await(importersFactory.buildFullNodeImporters(importAction))
-//      Logger.info("BuildStream::importers -> " + importers.debug)
-      val synchronisationChecker = importStreamFactory.fullNodePreSynchronisationChecker
-      val blockSource = importStreamFactory.buildBlockSource(walletClient)
-      val blockSink = importStreamFactory.buildBlockSink(importers)
+  def buildStream(implicit actorSystem: ActorSystem) = async {
+    val nodeState = await(synchronisationService.nodeState)
+    //      Logger.info("BuildStream::nodeState -> " + nodeState)
+    val importAction = await(importStreamFactory.buildImportActionFromImportStatus(nodeState))
+    //      Logger.info("BuildStream::importAction -> " + importAction)
+    val importers = await(importersFactory.buildFullNodeImporters(importAction))
+    //      Logger.info("BuildStream::importers -> " + importers.debug)
+    val synchronisationChecker = importStreamFactory.fullNodePreSynchronisationChecker
+    val blockSource = importStreamFactory.buildBlockSource(walletClient)
+    val blockSink = importStreamFactory.buildBlockSink(importers)
 
-      Source
-        .single(nodeState)
-        .via(synchronisationChecker)
-        .via(blockSource)
-        .via(importStreamFactory.buildBlockSequenceChecker)
-        .toMat(blockSink)(Keep.right)
-    }
+    Source
+      .single(nodeState)
+      .via(synchronisationChecker)
+      .via(blockSource)
+//      .via(importStreamFactory.buildBlockSequenceChecker)
+      .toMat(blockSink)(Keep.right)
   }
 
 }

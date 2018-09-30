@@ -1,5 +1,7 @@
 package tron4s
 
+import java.net.URI
+
 import akka.actor.{Actor, ActorRef, ActorSystem, Props}
 import akka.stream.ActorMaterializer
 import com.google.inject.name.{Named, Names}
@@ -11,6 +13,7 @@ import javax.inject.{Inject, Singleton}
 import org.tron.api.api.WalletGrpc.Wallet
 import org.tron.api.api.{WalletGrpc, WalletSolidityGrpc}
 import org.tron.api.api.WalletSolidityGrpc.WalletSolidity
+import play.api.db.slick.DatabaseConfigProvider
 import play.api.inject.ConfigurationProvider
 import play.api.libs.concurrent.{Akka, DefaultFutures}
 import tron4s.client.grpc.GrpcBalancer
@@ -18,7 +21,11 @@ import tron4s.grpc.GrpcPool
 import tron4s.importer.ImportManager
 import play.api.libs.ws.StandaloneWSClient
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
+import slick.basic.{BasicProfile, DatabaseConfig}
+import slick.jdbc.PostgresProfile
+import tron4s.importer.db.PgProfile
 
+import scala.concurrent.java8.FuturesConvertersImpl.P
 import scala.reflect.ClassTag
 //
 //
@@ -84,7 +91,7 @@ class Module extends AbstractModule {
   @Provides
   @Singleton
   @Inject
-  def buildGrpcClient(/*configurationProvider: ConfigurationProvider*/): WalletGrpc.Wallet = {
+  def buildGrpcClient(): WalletGrpc.Wallet = {
     val channel = ManagedChannelBuilder
       .forAddress("54.236.37.243", 50051)
       .usePlaintext(true)
@@ -96,13 +103,27 @@ class Module extends AbstractModule {
   @Provides
   @Singleton
   @Inject
-  def buildSolidityClient(/*configurationProvider: ConfigurationProvider*/): WalletSolidityGrpc.WalletSolidityStub = {
+  def buildSolidityClient(): WalletSolidityGrpc.WalletSolidityStub = {
     val channel = ManagedChannelBuilder
       .forAddress("39.105.66.80", 50051)
       .usePlaintext(true)
       .build
 
     WalletSolidityGrpc.stub(channel)
+  }
+
+  @Provides
+  @Singleton
+  @Inject
+  def buildDatabaseConfigProvider(): DatabaseConfigProvider = {
+    new DatabaseConfigProvider {
+
+      val config = DatabaseConfig.forConfig[slick.jdbc.PostgresProfile]("slick.dbs.default")
+
+      override def get[P <: BasicProfile]: DatabaseConfig[P] = {
+        config.asInstanceOf[DatabaseConfig[P]]
+      }
+    }
   }
 
 }

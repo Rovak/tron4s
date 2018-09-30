@@ -101,17 +101,21 @@ class BlockModelRepository @Inject() (val dbConfig: DatabaseConfigProvider) exte
 
   def clearAll = run {
     sql"""
-    TRUNCATE TABLE accounts;
-    TRUNCATE TABLE address_balance;
-    TRUNCATE TABLE asset_issue_contract;
-    TRUNCATE TABLE blocks CASCADE;
-    TRUNCATE TABLE analytics.vote_snapshot;
-    TRUNCATE TABLE ip_geo;
-    TRUNCATE TABLE participate_asset_issue;
-    TRUNCATE TABLE transactions;
-    TRUNCATE TABLE transfers;
-    TRUNCATE TABLE vote_witness_contract;
-    TRUNCATE TABLE witness_create_contract;
+     TRUNCATE TABLE accounts;
+     TRUNCATE TABLE address_balance;
+     TRUNCATE TABLE asset_issue_contract;
+     TRUNCATE TABLE blocks;
+     TRUNCATE TABLE funds;
+     TRUNCATE TABLE ip_geo;
+     TRUNCATE TABLE maintenance_round;
+     TRUNCATE TABLE participate_asset_issue;
+     TRUNCATE TABLE round_votes;
+     TRUNCATE TABLE sr_account;
+     TRUNCATE TABLE transactions;
+     TRUNCATE TABLE transfers;
+     TRUNCATE TABLE trx_request;
+     TRUNCATE TABLE vote_witness_contract;
+     TRUNCATE TABLE witness_create_contract;
     """.asUpdate
   }
 
