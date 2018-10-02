@@ -9,11 +9,13 @@ lazy val root = (project in file(".")).
     mainClass in assembly := Some("tron4s.cli.AppCli"),
     assemblyJarName in assembly := "tron4s.jar",
     inThisBuild(List(
-      organization := "tron4s",
+      organization := "org.rovak",
       scalaVersion := "2.12.7",
-      version      := "0.1.0-SNAPSHOT"
+      version      := "0.1.0-SNAPSHOT",
+
     )),
-    name := "tronweb4s",
+
+    name := "tron4s",
 
     libraryDependencies ++= Seq(
 //      scalaTest % Test,
@@ -107,3 +109,13 @@ lazy val root = (project in file(".")).
 )
 
 scalacOptions += "-Ypartial-unification"
+
+
+// Publishing
+
+publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository")))
+
+
+publishArtifact in (Compile, packageDoc) := false
+publishArtifact in packageDoc := false
+sources in (Compile,doc) := Seq.empty

@@ -12,6 +12,7 @@ import org.tron.protos.Contract.TransferContract
 import org.tron.protos.Tron.Transaction
 import org.tron.protos.Tron.Transaction.Contract.ContractType
 import tron4s.Implicits._
+import tron4s.domain.PrivateKey
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -70,9 +71,8 @@ class TransactionBuilder @Inject() (wallet: Wallet) {
   /**
     * Add signature to the transaction
     */
-  def sign(transaction: Transaction, pk: Array[Byte]): Transaction = {
-    val ecKey = ECKey.fromPrivate(pk)
-    val signature = ecKey.sign(Sha256Hash.hash(transaction.getRawData.toByteArray))
+  def sign(transaction: Transaction, pk: PrivateKey): Transaction = {
+    val signature = pk.key.sign(Sha256Hash.hash(transaction.getRawData.toByteArray))
     val sig = ByteString.copyFrom(signature.toByteArray)
     transaction.addSignature(sig)
   }

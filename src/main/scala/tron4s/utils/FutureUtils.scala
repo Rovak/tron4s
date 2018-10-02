@@ -24,4 +24,5 @@ object FutureUtils {
         Future.successful(result)
     }
   }
+
 }

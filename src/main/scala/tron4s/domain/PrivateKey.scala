@@ -1,7 +1,18 @@
 package tron4s.domain
 
+import com.google.protobuf.ByteString
 import org.tron.common.crypto.ECKey
 import org.tron.common.utils.{Base58, ByteArray}
+import play.api.libs.json.Json
+
+object PrivateKey {
+  def apply(keyBytes: Array[Byte]): PrivateKey = PrivateKey(keyBytes)
+  def apply(key: String): PrivateKey = PrivateKey(ByteArray.fromHexString(key))
+
+  def create = {
+    PrivateKey(new ECKey().getPrivKeyBytes)
+  }
+}
 
 /**
   * Private Key
@@ -9,19 +20,15 @@ import org.tron.common.utils.{Base58, ByteArray}
 case class PrivateKey(keyBytes: Array[Byte]) {
   require(keyBytes.length == 32,  "Key must be 32 bytes")
 
+
   /**
-    * Private key as hex string
+    * Private key
     */
-  def this(key: String) = {
-    this(ByteArray.fromHexString(key))
-  }
+  lazy val key = ECKey.fromPrivate(keyBytes)
 
   /**
     * Compute the address from the private key
     */
-  lazy val address = {
-    val key = ECKey.fromPrivate(keyBytes)
-    Base58.encode58Check(key.getAddress)
-  }
+  lazy val address = Base58.encode58Check(key.getAddress)
 
 }

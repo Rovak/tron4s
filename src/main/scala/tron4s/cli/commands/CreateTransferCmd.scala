@@ -10,6 +10,8 @@ import org.tron.protos.Tron.Transaction
 import org.tron.protos.Tron.Transaction.Contract.ContractType
 import tron4s.Implicits._
 import tron4s.cli.AppCmd
+import tron4s.domain
+import tron4s.domain.PrivateKey
 import tron4s.services.{TransactionBuilder, TransactionService}
 
 import scala.async.Async._
@@ -19,15 +21,14 @@ case class CreateTransferCmd(app: tron4s.App) extends Command {
   override def execute(args: AppCmd) = async {
 
     for {
-      privateKey <- ask("Key")
+      privateKeyStr <- ask("Key")
       to <- ask("to")
       amount <- askLong("How much")
     } {
       runSync(async {
 
-        val ecKey = ECKey.fromPrivate(ByteArray.fromHexString(privateKey))
-        val address = ecKey.getAddress
-        val addressStr = ByteString.copyFrom(address).encode58
+        val privateKey = PrivateKey(privateKeyStr)
+        val addressStr = privateKey.address
 
         val transactionBuilder = app.injector.getInstance(classOf[TransactionBuilder])
         val transferContract = TransferContract(
@@ -46,7 +47,7 @@ case class CreateTransferCmd(app: tron4s.App) extends Command {
           transaction = transaction.withRawData(transaction.getRawData.withData(data.toByteString))
         }
 
-        transaction = transactionBuilder.sign(transaction, ByteArray.fromHexString(privateKey))
+        transaction = transactionBuilder.sign(transaction, privateKey)
 
         val walletClient = app.injector.getInstance(classOf[WalletGrpc.Wallet])
 
