@@ -56,7 +56,7 @@ class GrpcBalancer @Inject() (config: Config) extends Actor {
 
   // Contains the stats of all the seednodes
   var nodeStatuses = Map[String, GrpcStats]()
-  var router = buildRouter(seedNodes)
+  var router: Router = Router(RoundRobinRoutingLogic(), Vector.empty)
   var totalStats = GrpcBalancerStats()
 
   def buildRouter(nodeIps: List[NodeAddress]) = {
@@ -110,6 +110,7 @@ class GrpcBalancer @Inject() (config: Config) extends Actor {
   override def preStart(): Unit = {
     import context.dispatcher
     pinger = Some(context.system.scheduler.schedule(4.second, 6.seconds, self, OptimizeNodes()))
+    router = buildRouter(seedNodes)
   }
 
   override def postStop(): Unit = {

@@ -1,17 +1,63 @@
 import Dependencies._
+import sbt.Keys.publishArtifact
 
 resolvers += Resolver.jcenterRepo
 
-enablePlugins(JavaAppPackaging)
+//enablePlugins(JavaAppPackaging)
 
-lazy val root = (project in file(".")).
-  settings(
+val projectVersion = "0.0.13-SNAPSHOT"
+val scVersion = "2.12.7"
+
+lazy val proto = (project in file("proto"))
+  .settings(
+
+    inThisBuild(List(
+      organization := "org.rovak",
+      scalaVersion := scVersion,
+      version      := projectVersion,
+    )),
+
+    name := "tron4s-proto",
+
+    libraryDependencies ++= Seq(
+      "com.google.protobuf" % "protobuf-java" % "3.4.0" % "protobuf",
+      "com.google.api.grpc" % "googleapis-common-protos" % "0.0.3" % "protobuf",
+      "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
+    ) ++ grpcDeps,
+
+    PB.protoSources in Compile := Seq(file("proto/protobuf"), file("proto/target/protobuf_external/google/api")),
+
+    PB.includePaths in Compile := Seq(file("proto/protobuf"), file("proto/target/protobuf_external")),
+
+    PB.targets in Compile := Seq(
+      scalapb.gen() -> (sourceManaged in Compile).value
+    ),
+
+    assemblyMergeStrategy in assembly := {
+      case PathList("META-INF", xs @ _*) =>
+        MergeStrategy.discard
+      case PathList("META-INF", "MANIFEST.MF") =>
+        MergeStrategy.discard
+      case _ =>
+        MergeStrategy.first
+    },
+
+    publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath + "/.m2/repository"))),
+    publishArtifact in (Compile, packageDoc) := false,
+    publishArtifact in packageDoc := false,
+    sources in (Compile,doc) := Seq.empty
+  )
+
+lazy val root = (project in file("."))
+  .aggregate(proto)
+  .dependsOn(proto)
+  .settings(
     mainClass in assembly := Some("tron4s.cli.AppCli"),
     assemblyJarName in assembly := "tron4s.jar",
     inThisBuild(List(
       organization := "org.rovak",
-      scalaVersion := "2.12.7",
-      version      := "0.0.2-SNAPSHOT",
+      scalaVersion := scVersion,
+      version      := projectVersion,
     )),
 
     name := "tron4s",
@@ -19,9 +65,6 @@ lazy val root = (project in file(".")).
     libraryDependencies ++= Seq(
 //      scalaTest % Test,
       specs2 % Test,
-      "com.google.protobuf" % "protobuf-java" % "3.4.0" % "protobuf",
-      "com.google.api.grpc" % "googleapis-common-protos" % "0.0.3" % "protobuf",
-      "com.thesamet.scalapb" %% "scalapb-runtime" % scalapb.compiler.Version.scalapbVersion % "protobuf",
 
       "org.scala-lang.modules" %% "scala-async" % "0.9.6",
 
@@ -81,21 +124,12 @@ lazy val root = (project in file(".")).
       slickPgDeps ++
       slickDeps,
 
-    scalacOptions in Test ++= Seq("-Yrangepos"),
-
     // Adds additional packages into Twirl
     //TwirlKeys.templateImports += "org.tronscan.controllers._"
 
     // Adds additional packages into conf/routes
     // play.sbt.routes.RoutesKeys.routesImport += "org.tronscan.binders._"
 
-    PB.protoSources in Compile := Seq(file("src/protobuf"), file("target/protobuf_external/google/api")),
-
-    PB.includePaths in Compile := Seq(file("src/protobuf"), file("target/protobuf_external")),
-
-    PB.targets in Compile := Seq(
-      scalapb.gen() -> (sourceManaged in Compile).value
-    ),
 
     assemblyMergeStrategy in assembly := {
       case PathList("META-INF", xs @ _*) =>
@@ -104,17 +138,22 @@ lazy val root = (project in file(".")).
         MergeStrategy.discard
       case _ =>
         MergeStrategy.first
-    }
-)
+    },
 
+    publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath + "/.m2/repository"))),
+    publishArtifact in (Compile, packageDoc) := false,
+    publishArtifact in packageDoc := false,
+    sources in (Compile,doc) := Seq.empty
+  )
+
+
+scalacOptions in Test ++= Seq("-Yrangepos")
 scalacOptions += "-Ypartial-unification"
 
+assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
 
 // Publishing
-
-publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath+"/.m2/repository")))
-
-
+publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath + "/.m2/repository")))
 publishArtifact in (Compile, packageDoc) := false
 publishArtifact in packageDoc := false
 sources in (Compile,doc) := Seq.empty

@@ -19,18 +19,13 @@ class TransactionService @Inject() (
 
   implicit val materializer = ActorMaterializer()
 
-  def confirmHash(hash: String)(implicit executionContext: ExecutionContext) = {
-
+  def confirmHash(hash: String)(implicit executionContext: ExecutionContext): Future[Transaction] = {
     for {
-      walletSolidity <- walletClient.solidity
       transaction <- Source
         .tick(3.seconds, 3.seconds, hash)
-        .mapAsync(1)(_ => walletSolidity.getTransactionById(BytesMessage(ByteString.copyFrom(ByteArray.fromHexString(hash)))))
+        .mapAsync(1)(_ => walletClient.fullRequest(_.getTransactionById(BytesMessage(ByteString.copyFrom(ByteArray.fromHexString(hash))))))
         .filter(_.rawData.isDefined)
         .runWith(Sink.head)
     } yield transaction
-
-
   }
-
 }

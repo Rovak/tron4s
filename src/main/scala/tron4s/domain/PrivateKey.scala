@@ -6,7 +6,6 @@ import org.tron.common.utils.{Base58, ByteArray}
 import play.api.libs.json.Json
 
 object PrivateKey {
-  def apply(keyBytes: Array[Byte]): PrivateKey = PrivateKey(keyBytes)
   def apply(key: String): PrivateKey = PrivateKey(ByteArray.fromHexString(key))
 
   def create = {
