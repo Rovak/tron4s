@@ -1,9 +1,9 @@
 package tron4s.domain
 
-import tron4s.AddressStr
+import tron4s.Implicits._
 
 trait HasAddress {
-  def address: AddressStr
+  def address: Address
 }
 
 object Address {
@@ -12,4 +12,7 @@ object Address {
 
 case class Address(address: String) {
   require(address.length == 34, "Address must be 34 characters")
+
+
+  def toByteString = address.decode58
 }

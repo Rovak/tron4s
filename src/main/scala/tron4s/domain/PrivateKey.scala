@@ -27,8 +27,13 @@ case class PrivateKey(keyBytes: Array[Byte]) {
   lazy val key = ECKey.fromPrivate(keyBytes)
 
   /**
+    * Get Key as hexdecimal
+    */
+  lazy val toHex = ByteArray.toHexString(keyBytes)
+
+  /**
     * Compute the address from the private key
     */
-  lazy val address = Base58.encode58Check(key.getAddress)
+  lazy val address = Address(Base58.encode58Check(key.getAddress))
 
 }

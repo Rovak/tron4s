@@ -12,6 +12,8 @@ import org.tron.protos.Tron.Transaction
 import org.tron.protos.Tron.Transaction.Contract.ContractType
 import tron4s.Implicits._
 import tron4s.domain.PrivateKey
+import tron4s.models
+import tron4s.models.{TransactionException, TransactionResult}
 import tron4s.services.TransactionBuilder
 
 import scala.async.Async._
@@ -29,7 +31,7 @@ class TransactionFacade @Inject() (
     val addressStr = privateKey.address
 
     val transferContract = TransferContract(
-      ownerAddress = addressStr.decode58,
+      ownerAddress = addressStr.toByteString,
       toAddress = to.decode58,
       amount = amount
     )
@@ -46,9 +48,12 @@ class TransactionFacade @Inject() (
 
     transaction = transactionBuilder.sign(transaction, privateKey)
 
-    await(walletClient.broadcastTransaction(transaction))
-
-    transaction
+    await(walletClient.broadcastTransaction(transaction)) match {
+      case result if result.result =>
+        Right(TransactionResult(transaction, result.code, result.message.decodeString))
+      case result if !result.result =>
+        Left(TransactionException(transaction, result.code, result.message.decodeString))
+    }
   }
 
   /**
@@ -59,7 +64,7 @@ class TransactionFacade @Inject() (
     val addressStr = privateKey.address
 
     val transferContract = TransferAssetContract(
-      ownerAddress = addressStr.decode58,
+      ownerAddress = addressStr.toByteString,
       toAddress = to.decode58,
       assetName = token.toByteString,
       amount = amount
@@ -78,9 +83,11 @@ class TransactionFacade @Inject() (
 
     transaction = transactionBuilder.sign(transaction, privateKey)
 
-    await(walletClient.broadcastTransaction(transaction))
-
-    transaction
+    await(walletClient.broadcastTransaction(transaction)) match {
+      case result if result.result =>
+        Right(TransactionResult(transaction, result.code, result.message.decodeString))
+      case result if !result.result =>
+        Left(TransactionException(transaction, result.code, result.message.decodeString))
+    }
   }
-
 }
