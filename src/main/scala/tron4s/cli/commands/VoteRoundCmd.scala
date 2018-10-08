@@ -7,6 +7,6 @@ import scala.io.StdIn
 case class VoteRoundCmd() extends Command {
 
   override def execute(args: AppCmd) = async {
-    println("got: " + ask("What name"))
+
   }
 }

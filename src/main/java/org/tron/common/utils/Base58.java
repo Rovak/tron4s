@@ -1,9 +1,8 @@
 package org.tron.common.utils;
 
-import org.tron.common.crypto.Hash;
-
 import java.io.UnsupportedEncodingException;
 import java.math.BigInteger;
+import java.util.Arrays;
 
 public class Base58 {
 
@@ -178,6 +177,35 @@ public class Base58 {
       return decodeData;
     }
     return null;
+  }
+
+  public static byte[] decodeBase58Address(String base58Sting) throws Exception {
+
+    if (base58Sting.length() <= 4)
+      throw new Exception("Invalid length");
+
+    byte[] address = decode58Check(base58Sting);
+
+    if (base58Sting.length() <= 4)
+      throw new Exception("Invalid length");
+
+    int len = address.length;
+    int  offset = len - 4;
+//    int checkSum = address.slice(offset);
+
+    address = Arrays.copyOfRange(address, 0, offset);
+
+    byte[] hash0 = Sha256Hash.hash(address);
+    byte[] hash1 = Sha256Hash.hash(hash0);
+    byte[] checkSum1 = Arrays.copyOfRange(hash1, 0, 4);
+
+//    if (checkSum[0] == checkSum1[0] && checkSum[1] == checkSum1[1] && checkSum[2] ==
+//            checkSum1[2] && checkSum[3] == checkSum1[3]
+//    ) {
+      return address;
+//    }
+
+//    return hexStr2byteArray('000000000000000000000000000000000000000000');
   }
 
 }

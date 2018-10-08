@@ -12,7 +12,7 @@ trait FullNodeClient {
 }
 
 /**
-  * Full Node Blockchain
+  * Full Node BlockChain
   */
 class FullNodeBlockChain(val client: WalletStub) extends BlockChain with FullNodeClient {
 

@@ -2,6 +2,8 @@ package tron4s.cli
 
 import java.util.Calendar
 
+import cats.instances.boolean
+
 import scala.async.Async._
 import tron4s.Implicits._
 import com.google.inject.Guice
@@ -53,6 +55,19 @@ object AppCli {
           cmd("reset")
             .text("Resets the database")
             .action((_, c) => c.copy(cmd = Some(ResetDatabaseCmd(app))))
+        )
+
+      cmd("tokens")
+        .text("Tokens actions")
+        .children(
+          cmd("list")
+            .text("List all tokens")
+            .action((_, c) => c.copy(cmd = Some(ListTokensCmd(app))))
+            .children(
+              opt[String]("format")
+                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[ListTokensCmd].copy(format = x))))
+                .text("set export format"),
+            )
         )
     }
 

@@ -1,4 +1,5 @@
 package tron4s.cli.commands
+
 import tron4s.cli.AppCmd
 import scala.async.Async._
 

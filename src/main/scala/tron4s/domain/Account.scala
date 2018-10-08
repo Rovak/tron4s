@@ -1,5 +1,3 @@
 package tron4s.domain
 
-class Account {
-
-}
+case class Account()

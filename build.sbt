@@ -83,6 +83,7 @@ lazy val root = (project in file("."))
       //  "com.google.code.findbugs" % "jsr305" % "3.0.0",
       "com.cedarsoftware" % "java-util" % "1.8.0",
       "org.apache.commons" % "commons-lang3" % "3.4",
+      "org.apache.commons" % "commons-text" % "1.5",
       "org.apache.commons" % "commons-collections4" % "4.0",
       "com.beust" % "jcommander" % "1.72",
       //  "com.github.etaty" %% "rediscala" % "1.8.0",
@@ -113,8 +114,9 @@ lazy val root = (project in file("."))
       "com.typesafe.play" %% "play-ws-standalone-json" % "2.0.0-M4",
 
       "com.typesafe" % "config" % "1.3.2",
+      "de.vandermeer" % "asciitable" % "0.3.2",
 
-      "de.vandermeer" % "asciitable" % "0.3.2"
+      "com.lightbend.akka" %% "akka-stream-alpakka-csv" % "0.18"
 
     ) ++
       grpcDeps ++

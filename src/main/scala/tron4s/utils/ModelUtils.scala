@@ -7,7 +7,9 @@ import org.tron.protos.Contract._
 import org.tron.protos.Tron.{Block, Transaction}
 import tron4s.importer.db.models
 import tron4s.Implicits._
+import tron4s.domain.Address
 import tron4s.importer.db.models._
+import tron4s.models.TokenModel
 
 object ModelUtils {
 
@@ -28,6 +30,19 @@ object ModelUtils {
       contractData = TransactionSerializer.serializeContract(trx.getRawData.contract.head),
       contractType = trx.getRawData.contract.head.`type`.value,
     )
+  }
+
+  def fromProto(assetIssueContract: AssetIssueContract) = {
+      TokenModel(
+        ownerAddress = Address(assetIssueContract.ownerAddress.encode58),
+        name = assetIssueContract.name.decodeString.trim,
+        abbreviation = assetIssueContract.abbr.decodeString.trim,
+        totalSupply = assetIssueContract.totalSupply,
+        startTime = new DateTime(assetIssueContract.startTime),
+        endTime = new DateTime(assetIssueContract.endTime),
+        description = assetIssueContract.description.decodeString,
+        url = assetIssueContract.url.decodeString,
+      )
   }
 
   /**
