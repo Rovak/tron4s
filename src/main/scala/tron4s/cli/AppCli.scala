@@ -69,6 +69,31 @@ object AppCli {
                 .text("set export format"),
             )
         )
+
+      cmd("transactions")
+        .text("Transaction actions")
+        .children(
+          cmd("from")
+            .text("List transactions for specific address")
+            .action((_, c) => c.copy(cmd = Some(ListTransactionsCmd(app))))
+            .children(
+              arg[String]("<address>")
+                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[ListTransactionsCmd].copy(fromAddress = Some(x))))),
+              opt[String]("format")
+                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[ListTransactionsCmd].copy(format = x))))
+                .text("set export format"),
+            ),
+          cmd("to")
+            .text("List transactions to specific address")
+            .action((_, c) => c.copy(cmd = Some(ListTransactionsCmd(app))))
+            .children(
+              arg[String]("<address>")
+                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[ListTransactionsCmd].copy(toAddress = Some(x))))),
+              opt[String]("format")
+                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[ListTransactionsCmd].copy(format = x))))
+                .text("set export format"),
+            ),
+        )
     }
 
     for {

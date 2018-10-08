@@ -45,6 +45,19 @@ object ModelUtils {
       )
   }
 
+  def fromProto(assetIssueContract: Transaction): TokenModel = {
+
+    ProtoUtils.fromContract(assetIssueContract.getRawData.contract.head) match {
+      case x: TransferContract =>
+    }
+
+      TransferModel(
+        ownerAddress = assetIssueContract.getRawData..encode58,
+        toAddress = assetIssueContract.getRawData..encode58
+        url = assetIssueContract.url.decodeString,
+      )
+  }
+
   /**
     * Converts a contract to a database model
     */

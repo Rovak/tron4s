@@ -6,8 +6,9 @@ import akka.util
 import akka.util.Timeout
 import com.typesafe.config.Config
 import javax.inject.{Inject, Named, Singleton}
+import org.tron.api.api.WalletExtensionGrpc.WalletExtensionStub
 import org.tron.api.api.WalletGrpc.WalletStub
-import org.tron.api.api.{WalletGrpc, WalletSolidityGrpc}
+import org.tron.api.api.{WalletExtensionGrpc, WalletGrpc, WalletSolidityGrpc}
 import tron4s.grpc.GrpcPool.{Channel, RequestChannel}
 
 import scala.concurrent.ExecutionContext.Implicits.global
@@ -25,6 +26,13 @@ class WalletClient @Inject()(
     val ip = config.getString("fullnode.ip")
     val port = config.getInt("fullnode.port")
     (grpcPool ? RequestChannel(ip, port)).mapTo[Channel].map(c => WalletGrpc.stub(c.channel))
+  }
+
+  def fullExtension: Future[WalletExtensionStub] = {
+    implicit val timeout = util.Timeout(3.seconds)
+    val ip = config.getString("fullnode.ip")
+    val port = config.getInt("fullnode.port")
+    (grpcPool ? RequestChannel(ip, port)).mapTo[Channel].map(c => WalletExtensionGrpc.stub(c.channel))
   }
 
   def fullRequest[A](request: WalletStub => Future[A]) = {

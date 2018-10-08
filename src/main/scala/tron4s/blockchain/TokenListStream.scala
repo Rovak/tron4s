@@ -1,4 +1,4 @@
-package tron4s.tokens
+package tron4s.blockchain
 
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
