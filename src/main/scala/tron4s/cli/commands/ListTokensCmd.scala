@@ -24,9 +24,7 @@ case class ListTokensCmd(app: tron4s.App, format: String = "csv") extends Comman
 
     await(
       dataExporter.exportData(
-        new TokenListStream(wallet)
-          .buildStream
-          .map(ModelUtils.fromProto),
+        new TokenListStream(wallet).buildStream.map(ModelUtils.fromProto),
         format
       )
     )

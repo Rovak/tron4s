@@ -89,6 +89,34 @@ case class ImportAction(
   logAllBlocks: Boolean = true,
 )
 
+object ImportStreamFactory {
+
+  /**
+    * Verifies that blocks are properly sequential
+    */
+  def buildBlockSequenceChecker = {
+    Flow[Block]
+      .statefulMapConcat { () =>
+        var number = -1L
+        block => {
+          val currentNumber = block.getBlockHeader.getRawData.number
+          if (number == -1) {
+            number = currentNumber
+            List(block)
+          } else if (number + 1 == currentNumber) {
+            number = block.getBlockHeader.getRawData.number
+            List(block)
+          } else if (number == currentNumber) {
+            List.empty
+          } else {
+            throw new Exception(s"Incorrect block number sequence, $number => $currentNumber")
+          }
+        }
+      }
+  }
+
+}
+
 class ImportStreamFactory @Inject()(
   syncService: SynchronisationService,
   blockChainBuilder: BlockChainStreamBuilder) {
@@ -185,30 +213,6 @@ class ImportStreamFactory @Inject()(
 
       SinkShape(blocks.in)
     })
-  }
-
-  /**
-    * Verifies that blocks are properly sequential
-    */
-  def buildBlockSequenceChecker = {
-    Flow[Block]
-      .statefulMapConcat { () =>
-        var number = -1L
-        block => {
-          val currentNumber = block.getBlockHeader.getRawData.number
-          if (number == -1) {
-            number = currentNumber
-            List(block)
-          } else if (number + 1 == currentNumber) {
-            number = block.getBlockHeader.getRawData.number
-            List(block)
-          } else if (number == currentNumber) {
-            List.empty
-          } else {
-            throw new Exception(s"Incorrect block number sequence, $number => $currentNumber")
-          }
-        }
-      }
   }
 
   /**

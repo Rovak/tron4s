@@ -24,7 +24,7 @@ class DataExporter {
               println(row.toRecord.fields.map(_.name).mkString(","))
               isFirst = false
             }
-            println(row.toCsv)
+            println(row.toRecord.toCsv)
           })
 
       case "xml" =>
@@ -35,15 +35,14 @@ class DataExporter {
 
         val doc = (
           <Document>
-            { xmlData.map(x => x.toXml) }
+            { xmlData.map(x => x.toRecord.toXml) }
           </Document>
         )
 
         println(p.format(doc))
 
       case _ =>
-        data
-          .runWith(Sink.foreach(println))
+        data.runWith(Sink.foreach(println))
     }
   }
 

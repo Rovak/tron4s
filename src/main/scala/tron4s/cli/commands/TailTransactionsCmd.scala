@@ -1,0 +1,43 @@
+package tron4s.cli.commands
+
+import akka.actor.ActorSystem
+import akka.stream.scaladsl.Sink
+import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
+import play.api.Logger
+import tron4s.cli.AppCmd
+import tron4s.client.grpc.WalletClient
+import tron4s.importer.BlockChainStreamBuilder
+import tron4s.utils.ModelUtils
+
+import scala.async.Async.{async, await}
+
+case class TailTransactionsCmd(app: tron4s.App)  extends Command {
+
+  override def execute(args: AppCmd) = async {
+
+    val decider: Supervision.Decider = { exc =>
+      Logger.error("SYNC NODE ERROR", exc)
+      Supervision.Restart
+    }
+
+    val blockChainStreamBuilder = app.injector.getInstance(classOf[BlockChainStreamBuilder])
+    val wallet = app.injector.getInstance(classOf[WalletClient])
+    implicit val system = app.injector.getInstance(classOf[ActorSystem])
+    implicit val materializer = ActorMaterializer(
+      ActorMaterializerSettings(system).withSupervisionStrategy(decider))(system)
+
+    val fullWallet = await(wallet.full)
+
+//    val dataExporter = new DataExporter
+
+    await(
+      blockChainStreamBuilder
+        .readFullNodeBlocksContinously(fullWallet)
+        .mapConcat(_.transactions.toList)
+        .map(ModelUtils.contractModelFromProto).filter(_.isDefined).map(_.get)
+        .runWith(Sink.foreach { transaction =>
+          println("transaction", transaction.toRecord.toCsv)
+        })
+    )
+  }
+}

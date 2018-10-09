@@ -5,22 +5,23 @@ import org.tron.api.api.AccountPaginated
 import org.tron.protos.Tron.Account
 import tron4s.client.grpc.WalletClient
 import tron4s.domain.Address
+import tron4s.Implicits._
 
 import scala.concurrent.ExecutionContext
+import scala.util.Success
 
 class TransactionStream(walletClient: WalletClient) {
 
-  def streamToThis(address: Address)(implicit executionContext: ExecutionContext) = {
-    val pageSize = 100
+  def streamToThis(address: Address, pageSize: Int = 100)(implicit executionContext: ExecutionContext) = {
     Source
       .single(0)
-      .mapAsync(1)(_ => walletClient.fullExtension)
+      .mapAsync(1)(_ => walletClient.solidityExtension)
       .flatMapConcat(client => {
         Source.unfoldAsync(0) { offset =>
-          client.getTransactionsToThis(AccountPaginated(Some(Account(address = address.toByteString)), offset, pageSize)).map {
+          client.getTransactionsFromThis(AccountPaginated(Some(Account(address = address.address.decode58)), offset, pageSize)).map {
             case transactions if transactions.transaction.nonEmpty =>
               Some(offset + pageSize, transactions)
-            case  _ =>
+            case _ =>
               None
           }
         }
@@ -28,17 +29,16 @@ class TransactionStream(walletClient: WalletClient) {
       .mapConcat(_.transaction.toList)
   }
 
-  def streamFromThis(address: Address)(implicit executionContext: ExecutionContext) = {
-    val pageSize = 100
+  def streamFromThis(address: Address, pageSize: Int = 100)(implicit executionContext: ExecutionContext) = {
     Source
       .single(0)
-      .mapAsync(1)(_ => walletClient.fullExtension)
+      .mapAsync(1)(_ => walletClient.solidityExtension)
       .flatMapConcat(client => {
         Source.unfoldAsync(0) { offset =>
-          client.getTransactionsFromThis(AccountPaginated(Some(Account(address = address.toByteString)), offset, pageSize)).map {
+          client.getTransactionsFromThis(AccountPaginated(Some(Account(address = address.address.decode58)), offset, pageSize)).map {
             case transactions if transactions.transaction.nonEmpty =>
               Some(offset + pageSize, transactions)
-            case  _ =>
+            case _ =>
               None
           }
         }

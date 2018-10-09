@@ -9,7 +9,7 @@ import tron4s.importer.db.models
 import tron4s.Implicits._
 import tron4s.domain.Address
 import tron4s.importer.db.models._
-import tron4s.models.TokenModel
+import tron4s.models.{BaseContractModel, TokenModel}
 
 object ModelUtils {
 
@@ -45,17 +45,51 @@ object ModelUtils {
       )
   }
 
-  def fromProto(assetIssueContract: Transaction): TokenModel = {
+  def contractModelFromProto(assetIssueContract: Transaction): Option[BaseContractModel] = {
 
     ProtoUtils.fromContract(assetIssueContract.getRawData.contract.head) match {
-      case x: TransferContract =>
-    }
+      case c: TransferContract =>
+        Some(tron4s.models.TransferContractModel(
+          ownerAddress = c.ownerAddress.encode58,
+          toAddress = c.toAddress.encode58,
+          amount = c.amount,
+          token = "TRX"))
 
-      TransferModel(
-        ownerAddress = assetIssueContract.getRawData..encode58,
-        toAddress = assetIssueContract.getRawData..encode58
-        url = assetIssueContract.url.decodeString,
-      )
+      case c: TransferAssetContract =>
+        Some(tron4s.models.TransferContractModel(
+          ownerAddress = c.ownerAddress.encode58,
+          toAddress = c.toAddress.encode58,
+          amount = c.amount,
+          token = c.assetName.decodeString))
+
+      case c: VoteWitnessContract =>
+        val votes = c.votes.map(x => (x.voteAddress.encode58, x.voteCount)).toMap
+        Some(VoteContractModel(c.ownerAddress.encode58, votes))
+
+      case c: WitnessCreateContract =>
+        Some(tron4s.models.WitnessModel(
+          address = Address(c.ownerAddress.encode58),
+          url = c.url.decodeString))
+
+      case c: WitnessUpdateContract =>
+        Some(tron4s.models.WitnessModel(
+          address = Address(c.ownerAddress.encode58),
+          url = c.updateUrl.decodeString))
+
+      case c: WithdrawBalanceContract =>
+        Some(tron4s.models.WithdrawBalanceModel(
+          address = Address(c.ownerAddress.encode58)))
+
+      case c: AccountUpdateContract =>
+        Some(tron4s.models.AccountUpdateModel(
+          address = Address(c.ownerAddress.encode58),
+          username = c.accountName.decodeString
+        ))
+
+      case x =>
+        println("x", x)
+        None
+    }
   }
 
   /**

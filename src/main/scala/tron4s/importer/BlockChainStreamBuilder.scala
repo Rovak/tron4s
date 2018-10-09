@@ -6,7 +6,7 @@ import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
 import org.tron.api.api.WalletGrpc.WalletStub
 import org.tron.api.api.WalletSolidityGrpc.WalletSolidityStub
-import org.tron.api.api.{BlockLimit, NumberMessage}
+import org.tron.api.api.{BlockLimit, EmptyMessage, NumberMessage}
 import org.tron.protos.Tron.Transaction.Contract.ContractType.{AssetIssueContract, ParticipateAssetIssueContract, TransferAssetContract, TransferContract, VoteWitnessContract, WitnessCreateContract}
 import org.tron.protos.Tron.{Block, Transaction}
 import play.api.Logger
@@ -16,6 +16,7 @@ import tron4s.importer.StreamTypes.ContractFlow
 import tron4s.importer.db.models._
 import tron4s.utils.ModelUtils
 
+import scala.concurrent.duration._
 import scala.concurrent.ExecutionContext
 
 class BlockChainStreamBuilder {
@@ -36,6 +37,15 @@ class BlockChainStreamBuilder {
     Source(from to to)
       .mapAsync(parallel) { i => client.getBlockByNum(NumberMessage(i)) }
       .filter(_.blockHeader.isDefined)
+  }
+
+  /**
+    * Reads the blocks with getBlockByNum
+    */
+  def readFullNodeBlocksContinously(client: WalletStub) = {
+    Source.tick(0.seconds, 3.seconds, "")
+      .mapAsync(1) { _ => client.getNowBlock(EmptyMessage()) }
+      .via(ImportStreamFactory.buildBlockSequenceChecker)
   }
 
   /**

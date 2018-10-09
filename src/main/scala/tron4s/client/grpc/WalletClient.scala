@@ -46,4 +46,11 @@ class WalletClient @Inject()(
     val port = config.getInt("solidity.port")
     (grpcPool ? RequestChannel(ip, port)).mapTo[Channel].map(c => WalletSolidityGrpc.stub(c.channel))
   }
+
+  def solidityExtension = {
+    implicit val timeout = util.Timeout(3.seconds)
+    val ip = config.getString("solidity.ip")
+    val port = config.getInt("solidity.port")
+    (grpcPool ? RequestChannel(ip, port)).mapTo[Channel].map(c => WalletExtensionGrpc.stub(c.channel))
+  }
 }

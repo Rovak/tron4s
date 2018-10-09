@@ -2,10 +2,11 @@ package tron4s.cli.commands
 
 import akka.NotUsed
 import akka.actor.ActorSystem
-import akka.stream.ActorMaterializer
+import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 import akka.stream.scaladsl.Source
 import org.tron.protos.Tron.Transaction
-import tron4s.blockchain.{TokenListStream, TransactionStream}
+import play.api.Logger
+import tron4s.blockchain.TransactionStream
 import tron4s.cli.AppCmd
 import tron4s.client.grpc.WalletClient
 import tron4s.domain.Address
@@ -18,17 +19,20 @@ case class ListTransactionsCmd(app: tron4s.App, format: String = "csv", fromAddr
 
   override def execute(args: AppCmd) = async {
 
+    val decider: Supervision.Decider = { exc =>
+      Logger.error("SYNC NODE ERROR", exc)
+      Supervision.Restart
+    }
+
     implicit val system = app.injector.getInstance(classOf[ActorSystem])
-    implicit val materializer = ActorMaterializer()
+    implicit val materializer = ActorMaterializer(
+      ActorMaterializerSettings(system).withSupervisionStrategy(decider))(system)
 
     val dataExporter = new DataExporter
 
-    println("starting to read all tokens")
-
     await(
       dataExporter.exportData(
-        buildStream
-          .map(ModelUtils.fromProto),
+        buildStream.map(ModelUtils.contractModelFromProto).filter(_.isDefined).map(_.get),
         format
       )
     )
@@ -38,13 +42,10 @@ case class ListTransactionsCmd(app: tron4s.App, format: String = "csv", fromAddr
     val wallet = app.injector.getInstance(classOf[WalletClient])
 
     fromAddress.map { from =>
-      new TransactionStream(wallet)
-        .streamFromThis(Address(from))
-        .map(x => ModelUtils.contractToModel(x.getRawData.contract.head))
+      new TransactionStream(wallet).streamFromThis(Address(from))
     }.orElse {
       toAddress.map { to =>
-        new TransactionStream(wallet)
-          .streamToThis(Address(to))
+        new TransactionStream(wallet).streamToThis(Address(to))
       }
     }.getOrElse(Source.empty)
   }

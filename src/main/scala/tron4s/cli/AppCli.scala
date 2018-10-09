@@ -1,12 +1,7 @@
 package tron4s.cli
 
-import java.util.Calendar
-
-import cats.instances.boolean
-
-import scala.async.Async._
-import tron4s.Implicits._
 import com.google.inject.Guice
+import tron4s.Implicits._
 import tron4s.Module
 import tron4s.cli.commands._
 
@@ -92,6 +87,33 @@ object AppCli {
               opt[String]("format")
                 .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[ListTransactionsCmd].copy(format = x))))
                 .text("set export format"),
+            ),
+        )
+
+
+      cmd("tail")
+        .text("monitor transactions")
+        .children(
+          cmd("blocks")
+            .text("monitor incoming blocks")
+            .action((_, c) => c.copy(cmd = Some(TailBlocksCmd(app))))
+            .children(
+//              arg[String]("<address>")
+//                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailBlocksCmd].copy(fromAddress = Some(x))))),
+//              opt[String]("format")
+//                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailBlocksCmd].copy(format = x))))
+//                .text("set export format"),
+            ),
+
+          cmd("transactions")
+            .text("monitor incoming transactions")
+            .action((_, c) => c.copy(cmd = Some(TailTransactionsCmd(app))))
+            .children(
+//              arg[String]("<address>")
+//                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailBlocksCmd].copy(fromAddress = Some(x))))),
+//              opt[String]("format")
+//                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailBlocksCmd].copy(format = x))))
+//                .text("set export format"),
             ),
         )
     }
