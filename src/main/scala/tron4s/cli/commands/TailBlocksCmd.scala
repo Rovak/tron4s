@@ -6,11 +6,12 @@ import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 import play.api.Logger
 import tron4s.cli.AppCmd
 import tron4s.client.grpc.WalletClient
+import tron4s.Implicits._
 import tron4s.importer.BlockChainStreamBuilder
 
 import scala.async.Async.{async, await}
 
-case class TailBlocksCmd(app: tron4s.App)  extends Command {
+case class TailBlocksCmd(app: tron4s.App, producer: Option[String] = None)  extends Command {
 
   override def execute(args: AppCmd) = async {
 
@@ -27,11 +28,15 @@ case class TailBlocksCmd(app: tron4s.App)  extends Command {
 
     val fullWallet = await(wallet.full)
 
-//    val dataExporter = new DataExporter
+    var stream = blockChainStreamBuilder
+      .readFullNodeBlocksContinously(fullWallet)
+
+    producer.foreach { producerAddress =>
+      stream = stream.filter(_.witness == producerAddress)
+    }
 
     await(
-      blockChainStreamBuilder
-        .readFullNodeBlocksContinously(fullWallet)
+      stream
         .runWith(Sink.foreach { block =>
           println("block", block.getBlockHeader.getRawData.number)
         })

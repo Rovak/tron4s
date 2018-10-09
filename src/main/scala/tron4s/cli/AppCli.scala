@@ -100,9 +100,9 @@ object AppCli {
             .children(
 //              arg[String]("<address>")
 //                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailBlocksCmd].copy(fromAddress = Some(x))))),
-//              opt[String]("format")
-//                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailBlocksCmd].copy(format = x))))
-//                .text("set export format"),
+              opt[String]("producer")
+                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailBlocksCmd].copy(producer = Some(x)))))
+                .text("set export format"),
             ),
 
           cmd("transactions")
@@ -114,6 +114,9 @@ object AppCli {
 //              opt[String]("format")
 //                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailBlocksCmd].copy(format = x))))
 //                .text("set export format"),
+              opt[Seq[String]]("address")
+                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailTransactionsCmd].copy(address = Some(x)))))
+                .text("filter by address"),
             ),
         )
     }

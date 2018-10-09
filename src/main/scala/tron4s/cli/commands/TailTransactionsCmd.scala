@@ -8,10 +8,11 @@ import tron4s.cli.AppCmd
 import tron4s.client.grpc.WalletClient
 import tron4s.importer.BlockChainStreamBuilder
 import tron4s.utils.ModelUtils
+import tron4s.Implicits._
 
 import scala.async.Async.{async, await}
 
-case class TailTransactionsCmd(app: tron4s.App)  extends Command {
+case class TailTransactionsCmd(app: tron4s.App, address: Option[Seq[String]] = None)  extends Command {
 
   override def execute(args: AppCmd) = async {
 
@@ -30,10 +31,17 @@ case class TailTransactionsCmd(app: tron4s.App)  extends Command {
 
 //    val dataExporter = new DataExporter
 
+    var stream =  blockChainStreamBuilder
+      .readFullNodeBlocksContinously(fullWallet)
+      .mapConcat(_.transactions.toList)
+
+    // Filter by address
+    address.foreach { from =>
+      stream = stream.filter(_.getRawData.contract.head.addresses.exists(x => from.contains(x)))
+    }
+
     await(
-      blockChainStreamBuilder
-        .readFullNodeBlocksContinously(fullWallet)
-        .mapConcat(_.transactions.toList)
+      stream
         .map(ModelUtils.contractModelFromProto).filter(_.isDefined).map(_.get)
         .runWith(Sink.foreach { transaction =>
           println("transaction", transaction.toRecord.toCsv)
