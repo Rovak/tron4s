@@ -43,7 +43,7 @@ class BlockChainStreamBuilder {
     * Reads the blocks with getBlockByNum
     */
   def readFullNodeBlocksContinously(client: WalletStub) = {
-    Source.tick(0.seconds, 3.seconds, "")
+    Source.tick(0.seconds, 2.5.seconds, "")
       .mapAsync(1) { _ => client.getNowBlock(EmptyMessage()) }
       .via(ImportStreamFactory.buildBlockSequenceChecker)
   }
