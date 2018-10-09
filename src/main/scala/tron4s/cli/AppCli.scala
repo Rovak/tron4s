@@ -4,6 +4,7 @@ import com.google.inject.Guice
 import tron4s.Implicits._
 import tron4s.Module
 import tron4s.cli.commands._
+import scala.concurrent.ExecutionContext.Implicits.global
 
 object AppCli {
 
@@ -90,7 +91,6 @@ object AppCli {
             ),
         )
 
-
       cmd("tail")
         .text("monitor transactions")
         .children(
@@ -115,6 +115,18 @@ object AppCli {
                 .text("filter by token"),
             ),
         )
+
+
+      cmd("account")
+        .text("show account")
+        .action((_, c) => c.copy(cmd = Some(ShowAccountCmd(app, account = ""))))
+        .children(
+          arg[String]("<address>")
+            .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[ShowAccountCmd].copy(account = x)))),
+          opt[String]("node")
+            .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[ShowAccountCmd].copy(node = x))))
+            .text("full or solidity"),
+        )
     }
 
     for {
@@ -123,6 +135,8 @@ object AppCli {
     } {
       runSync(cmd.execute(config))
     }
+
+    app.shutdown()
   }
 
 }
