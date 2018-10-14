@@ -3,16 +3,15 @@ package tron4s.services
 import com.google.protobuf.ByteString
 import com.google.protobuf.any.Any
 import javax.inject.Inject
-import org.joda.time.DateTime
 import org.tron.api.api.EmptyMessage
 import org.tron.api.api.WalletGrpc.Wallet
-import org.tron.common.crypto.ECKey
 import org.tron.common.utils.{ByteArray, Sha256Hash}
 import org.tron.protos.Contract.TransferContract
 import org.tron.protos.Tron.Transaction
 import org.tron.protos.Tron.Transaction.Contract.ContractType
 import tron4s.Implicits._
-import tron4s.domain.PrivateKey
+import tron4s.domain.{Address, PrivateKey}
+import tron4s.models.BlockReference
 
 import scala.concurrent.{ExecutionContext, Future}
 
@@ -35,10 +34,10 @@ class TransactionBuilder @Inject() (wallet: Wallet) {
   /**
     * Build transfer contract
     */
-  def buildTrxTransfer(from: Array[Byte], to: String, amount: Long): Transaction = {
+  def buildTrxTransfer(from: Address, to: String, amount: Long): Transaction = {
 
     val transferContract = TransferContract(
-      ownerAddress = ByteString.copyFrom(from),
+      ownerAddress = from.address.toByteString,
       toAddress = to.decode58,
       amount = amount)
 
@@ -54,17 +53,21 @@ class TransactionBuilder @Inject() (wallet: Wallet) {
     * Add block reference
     */
   def setReference(transaction: Transaction)(implicit executionContext: ExecutionContext): Future[Transaction] = {
+    getBlockReference().map(_.setReference(transaction))
+  }
+
+  /**
+    * Add block reference
+    */
+  def getBlockReference()(implicit executionContext: ExecutionContext): Future[BlockReference] = {
     for {
       latestBlock <- wallet.getNowBlock(EmptyMessage())
     } yield {
-      val raw = transaction.rawData.get
-        .withRefBlockHash(ByteString.copyFrom(ByteArray.subArray(latestBlock.rawHash.getBytes, 8, 16)))
-        .withRefBlockBytes(ByteString.copyFrom(ByteArray.subArray(ByteArray.fromLong(latestBlock.getBlockHeader.getRawData.number), 6, 8)))
-        .withExpiration(latestBlock.getBlockHeader.getRawData.timestamp + (60 * 5 * 1000))
-        .withTimestamp(DateTime.now().getMillis)
-
-      transaction
-        .withRawData(raw)
+      BlockReference(
+        blockHash = ByteString.copyFrom(ByteArray.subArray(latestBlock.rawHash.getBytes, 8, 16)),
+        blockRef = ByteString.copyFrom(ByteArray.subArray(ByteArray.fromLong(latestBlock.getBlockHeader.getRawData.number), 6, 8)),
+        expiration = latestBlock.getBlockHeader.getRawData.timestamp + (60 * 5 * 1000),
+      )
     }
   }
 

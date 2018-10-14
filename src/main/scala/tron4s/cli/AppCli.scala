@@ -1,9 +1,12 @@
 package tron4s.cli
 
+import java.io.File
+
 import com.google.inject.Guice
 import tron4s.Implicits._
 import tron4s.Module
 import tron4s.cli.commands._
+
 import scala.concurrent.ExecutionContext.Implicits.global
 
 object AppCli {
@@ -116,7 +119,6 @@ object AppCli {
             ),
         )
 
-
       cmd("account")
         .text("show account")
         .action((_, c) => c.copy(cmd = Some(ShowAccountCmd(app, account = ""))))
@@ -126,6 +128,24 @@ object AppCli {
           opt[String]("node")
             .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[ShowAccountCmd].copy(node = x))))
             .text("full or solidity"),
+        )
+
+      cmd("batch")
+        .text("batch insert and broadcast transactions")
+        .action((_, c) => c.copy(cmd = Some(BatchTransactionsCmd(app))))
+        .children(
+          arg[String]("<file>")
+            .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[BatchTransactionsCmd].copy(file = Some(new File(x)))))),
+          opt[String]("pk")
+            .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[BatchTransactionsCmd].copy(pk = Some(x)))))
+            .text("private key"),
+          checkConfig { c =>
+            if (c.cmd.exists(_.asInstanceOf[BatchTransactionsCmd].pk.isDefined)) {
+              success
+            } else {
+              failure("private key is required!")
+            }
+          }
         )
     }
 

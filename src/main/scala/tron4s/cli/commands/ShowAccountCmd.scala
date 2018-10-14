@@ -22,6 +22,7 @@ case class ShowAccountCmd(app: tron4s.App, account: String, node: String = "full
         } yield {
           write(AccountModel.fromProto(account).toRecord.toCsv)
         })
+
       case "solidity" =>
         await(for {
           fullClient <- client.solidity
