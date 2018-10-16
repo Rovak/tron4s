@@ -116,6 +116,9 @@ object AppCli {
               opt[String]("token")
                 .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailTransactionsCmd].copy(token = Some(x)))))
                 .text("filter by token"),
+              opt[Int]("contract")
+                .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[TailTransactionsCmd].copy(contractType = Some(x)))))
+                .text("filter by contract"),
             ),
         )
 
@@ -140,11 +143,13 @@ object AppCli {
             .action((x, c) => c.copy(cmd = c.cmd.map(_.asInstanceOf[BatchTransactionsCmd].copy(pk = Some(x)))))
             .text("private key"),
           checkConfig { c =>
-            if (c.cmd.exists(_.asInstanceOf[BatchTransactionsCmd].pk.isDefined)) {
-              success
-            } else {
-              failure("private key is required!")
-            }
+//            if (c.cmd.exists(_.asInstanceOf[BatchTransactionsCmd].pk.isDefined)) {
+//              success
+//            } else {
+//              failure("private key is required!")
+//            }
+            success
+
           }
         )
     }

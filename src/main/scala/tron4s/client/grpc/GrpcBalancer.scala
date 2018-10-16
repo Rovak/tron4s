@@ -84,25 +84,28 @@ class GrpcBalancer @Inject() (config: Config) extends Actor {
       .groupBy(x => x)
       .map(x => (x._1, x._2.size))
 
-    // Find the most common block hash
-    val mostCommonBlockHash = chainCounts.toList.maxBy(x => x._2)._1
+    if (chainCounts.nonEmpty) {
 
-    // Find all the nodes which have the common hash in their recent blocks
-    val validChainNodes = for {
-      (_, stats) <- nodeStatuses
-      if stats.blocks.exists(_.hash == mostCommonBlockHash)
-    } yield stats
+      // Find the most common block hash
+      val mostCommonBlockHash = chainCounts.toList.maxBy(x => x._2)._1
 
-    // Take the 12 fastest nodes
-    val sortedNodes = validChainNodes.toList.sortBy(_.responseTime)
-    val fastestNodes = sortedNodes.take(maxClients)
+      // Find all the nodes which have the common hash in their recent blocks
+      val validChainNodes = for {
+        (_, stats) <- nodeStatuses
+        if stats.blocks.exists(_.hash == mostCommonBlockHash)
+      } yield stats
 
-    totalStats = GrpcBalancerStats(
-      activeNodes = fastestNodes,
-      nodes = sortedNodes.drop(maxClients)
-    )
+      // Take the 12 fastest nodes
+      val sortedNodes = validChainNodes.toList.sortBy(_.responseTime)
+      val fastestNodes = sortedNodes.take(maxClients)
 
-    router = buildRouterWithRefs(fastestNodes.map(_.ref))
+      totalStats = GrpcBalancerStats(
+        activeNodes = fastestNodes,
+        nodes = sortedNodes.drop(maxClients)
+      )
+
+      router = buildRouterWithRefs(fastestNodes.map(_.ref))
+    }
   }
 
   var pinger: Option[Cancellable] = None

@@ -13,7 +13,10 @@ import tron4s.models.TransferContractModel
 
 import scala.async.Async.{async, await}
 
-case class TailTransactionsCmd(app: tron4s.App, address: Option[Seq[String]] = None, token: Option[String] = None)  extends Command {
+case class TailTransactionsCmd(app: tron4s.App,
+  address: Option[Seq[String]] = None,
+  token: Option[String] = None,
+  contractType: Option[Int] = None)  extends Command {
 
   override def execute(args: AppCmd) = async {
 
@@ -40,6 +43,10 @@ case class TailTransactionsCmd(app: tron4s.App, address: Option[Seq[String]] = N
     address.foreach { from =>
       stream = stream.filter(_.getRawData.contract.head.addresses.exists(x => from.contains(x)))
     }
+    // Filter by address
+    contractType.foreach { contractTypeId =>
+      stream = stream.filter(_.getRawData.contract.head.`type`.value == contractTypeId)
+    }
 
     var stream2 = stream
       .map(ModelUtils.contractModelFromProto).filter(_.isDefined).map(_.get)
@@ -57,7 +64,7 @@ case class TailTransactionsCmd(app: tron4s.App, address: Option[Seq[String]] = N
     await {
       stream2
         .runWith(Sink.foreach { transaction =>
-          println("transaction", transaction.toRecord.toCsv)
+          println("transaction", transaction.contractType, transaction.toRecord.toCsv)
         })
     }
   }
