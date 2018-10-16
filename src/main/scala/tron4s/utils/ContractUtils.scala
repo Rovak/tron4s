@@ -8,7 +8,7 @@ object ContractUtils {
 
   def getOwner(contract: Transaction.Contract) = {
 
-    ProtoUtils.fromContract(contract) match {
+    ProtoUtils.fromContract(contract).map {
       case c: AccountCreateContract =>
         c.ownerAddress.encode58
 
@@ -92,12 +92,12 @@ object ContractUtils {
 
       case _ =>
         ""
-    }
+    }.getOrElse("")
   }
 
   def getTo(contract: Transaction.Contract): Option[String] = {
 
-    ProtoUtils.fromContract(contract) match {
+    ProtoUtils.fromContract(contract).flatMap {
       case c: AccountCreateContract =>
         Some(c.accountAddress.encode58)
 

@@ -47,7 +47,7 @@ object ModelUtils {
 
   def contractModelFromProto(assetIssueContract: Transaction): Option[BaseContractModel] = {
 
-    ProtoUtils.fromContract(assetIssueContract.getRawData.contract.head) match {
+    ProtoUtils.fromContract(assetIssueContract.getRawData.contract.head).flatMap {
       case c: TransferContract =>
         Some(tron4s.models.TransferContractModel(
           ownerAddress = c.ownerAddress.encode58,
@@ -100,7 +100,7 @@ object ModelUtils {
     val transactionHash = trx.hash
     val transactionTime = new DateTime(header.timestamp)
 
-    ProtoUtils.fromContract(contract) match {
+    ProtoUtils.fromContract(contract).flatMap {
       case c: TransferContract =>
         Some(TransferModel(
           transactionHash = transactionHash,
