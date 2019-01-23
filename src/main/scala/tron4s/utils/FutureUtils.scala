@@ -3,7 +3,7 @@ package tron4s.utils
 import akka.actor.Scheduler
 import akka.pattern.after
 
-import scala.concurrent.{ExecutionContext, Future}
+import scala.concurrent.{ExecutionContext, Future, Promise}
 import scala.concurrent.duration._
 
 object FutureUtils {
@@ -23,6 +23,16 @@ object FutureUtils {
       case (result, false) =>
         Future.successful(result)
     }
+  }
+
+
+  def delay(timeout: FiniteDuration)(implicit scheduler: monix.execution.Scheduler): Future[Boolean] = {
+    val promise = Promise[Boolean]()
+    scheduler.scheduleOnce(timeout) {
+      promise.success(true)
+    }
+
+    promise.future
   }
 
 }

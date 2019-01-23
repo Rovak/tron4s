@@ -28,7 +28,7 @@ class WalletFacade @Inject() (
     for {
       fullNode <- walletClient.full
       account <- fullNode.getAccount(Account(address = address.address.decode58))
-    } yield account.asset.map { case (name, amount) => TokenBalance(name, amount) }
+    } yield account.assetV2.map { case (name, amount) => TokenBalance(name, amount) }
   }
 
 }

@@ -3,6 +3,7 @@ package tron4s.services
 import com.google.protobuf.ByteString
 import com.google.protobuf.any.Any
 import javax.inject.Inject
+import org.joda.time.DateTime
 import org.tron.api.api.EmptyMessage
 import org.tron.api.api.WalletGrpc.Wallet
 import org.tron.common.utils.{ByteArray, Sha256Hash}
@@ -26,8 +27,9 @@ class TransactionBuilder @Inject() (wallet: Wallet) {
   def buildTransactionWithContract(contract: Transaction.Contract): Transaction = {
     Transaction(
       rawData = Some(Transaction.raw(
-        contract = Seq(contract)
-      ))
+        contract = Seq(contract),
+        timestamp = DateTime.now().getMillis
+      )),
     )
   }
 

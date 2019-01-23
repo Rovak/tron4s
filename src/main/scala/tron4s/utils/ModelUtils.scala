@@ -86,6 +86,12 @@ object ModelUtils {
           username = c.accountName.decodeString
         ))
 
+      case c: AccountUpdateContract =>
+        Some(tron4s.models.AccountUpdateModel(
+          address = Address(c.ownerAddress.encode58),
+          username = c.accountName.decodeString
+        ))
+
       case x =>
         None
     }

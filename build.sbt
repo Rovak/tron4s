@@ -5,7 +5,7 @@ resolvers += Resolver.jcenterRepo
 
 //enablePlugins(JavaAppPackaging)
 
-val projectVersion = "0.0.13-SNAPSHOT"
+val projectVersion = "0.0.18-SNAPSHOT"
 val scVersion = "2.12.7"
 
 lazy val proto = (project in file("proto"))
@@ -76,17 +76,12 @@ lazy val root = (project in file("."))
       "commons-codec" % "commons-codec" % "1.11",
       "com.madgag.spongycastle" % "core" % "1.53.0.0",
       "com.madgag.spongycastle" % "prov" % "1.53.0.0",
-      //  "com.google.guava" % "guava" % "18.0",
-//      "org.iq80.leveldb" % "leveldb" % "0.10",
-//      "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
       "com.typesafe" % "config" % "1.3.2",
-      //  "com.google.code.findbugs" % "jsr305" % "3.0.0",
       "com.cedarsoftware" % "java-util" % "1.8.0",
       "org.apache.commons" % "commons-lang3" % "3.4",
       "org.apache.commons" % "commons-text" % "1.5",
       "org.apache.commons" % "commons-collections4" % "4.0",
       "com.beust" % "jcommander" % "1.72",
-      //  "com.github.etaty" %% "rediscala" % "1.8.0",
       "joda-time" % "joda-time" % "2.3",
 
       // Data Access
@@ -99,7 +94,6 @@ lazy val root = (project in file("."))
 
       "org.ocpsoft.prettytime" % "prettytime" % "4.0.1.Final",
 
-//      "com.lihaoyi" % "ammonite" % "1.2.1" % "test" cross CrossVersion.full,
 
       "com.github.scopt" %% "scopt" % "3.7.0",
 
@@ -117,6 +111,13 @@ lazy val root = (project in file("."))
       "de.vandermeer" % "asciitable" % "0.3.2",
 
       "com.lightbend.akka" %% "akka-stream-alpakka-csv" % "0.18"
+
+      //  "com.google.code.findbugs" % "jsr305" % "3.0.0",
+      //  "com.github.etaty" %% "rediscala" % "1.8.0",
+      //  "com.google.guava" % "guava" % "18.0",
+      //      "org.iq80.leveldb" % "leveldb" % "0.10",
+      //      "org.fusesource.leveldbjni" % "leveldbjni-all" % "1.8",
+      //      "com.lihaoyi" % "ammonite" % "1.2.1" % "test" cross CrossVersion.full,
 
     ) ++
       grpcDeps ++
