@@ -104,13 +104,14 @@ lazy val root = (project in file("."))
       "org.bitcoinj" % "bitcoinj-core" % "0.14.7",
 
       "com.google.inject" % "guice" % "4.2.1",
+      "org.web3j" % "core" % "4.2.0",
       "com.typesafe.play" %% "play-ahc-ws-standalone" % "2.0.0-M4",
       "com.typesafe.play" %% "play-ws-standalone-json" % "2.0.0-M4",
 
       "com.typesafe" % "config" % "1.3.2",
       "de.vandermeer" % "asciitable" % "0.3.2",
 
-      "com.lightbend.akka" %% "akka-stream-alpakka-csv" % "0.18"
+      "com.lightbend.akka" %% "akka-stream-alpakka-csv" % "0.18",
 
       //  "com.google.code.findbugs" % "jsr305" % "3.0.0",
       //  "com.github.etaty" %% "rediscala" % "1.8.0",
