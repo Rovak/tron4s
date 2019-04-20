@@ -53,7 +53,6 @@ case class CreateTransferCmd(app: tron4s.App) extends Command {
 
         if (askBoolean(s"Sending $amount TRX from $addressStr to $to. Confirm?").contains(true)) {
 
-//          await(walletClient.broadcastTransaction(transaction))
           await(transactionFacade.broadcastWithRetries(walletClient, transaction, TransactionRetries(6, 6)))
           write(s"Successfully sent $amount TRX from $addressStr to $to\nHash: ${transaction.hash}")
 
