@@ -28,7 +28,7 @@ class TransactionBuilder @Inject() (wallet: Wallet) {
     Transaction(
       rawData = Some(Transaction.raw(
         contract = Seq(contract),
-        timestamp = DateTime.now().getMillis
+        timestamp = DateTime.now().getMillis,
       )),
     )
   }

@@ -5,8 +5,8 @@ resolvers += Resolver.jcenterRepo
 
 //enablePlugins(JavaAppPackaging)
 
-val projectVersion = "0.0.18-SNAPSHOT"
-val scVersion = "2.12.7"
+val projectVersion = "0.0.24-SNAPSHOT"
+val scVersion = "2.12.8"
 
 lazy val proto = (project in file("proto"))
   .settings(
@@ -33,18 +33,18 @@ lazy val proto = (project in file("proto"))
       scalapb.gen() -> (sourceManaged in Compile).value
     ),
 
-    assemblyMergeStrategy in assembly := {
-      case PathList("META-INF", xs @ _*) =>
-        MergeStrategy.discard
-      case PathList("META-INF", "MANIFEST.MF") =>
-        MergeStrategy.discard
-      case _ =>
-        MergeStrategy.first
-    },
-
-    publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath + "/.m2/repository"))),
-    publishArtifact in (Compile, packageDoc) := false,
-    publishArtifact in packageDoc := false,
+//    assemblyMergeStrategy in assembly := {
+//      case PathList("META-INF", xs @ _*) =>
+//        MergeStrategy.discard
+//      case PathList("META-INF", "MANIFEST.MF") =>
+//        MergeStrategy.discard
+//      case _ =>
+//        MergeStrategy.first
+//    },
+//
+//    publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath + "/.m2/repository"))),
+//    publishArtifact in (Compile, packageDoc) := false,
+//    publishArtifact in packageDoc := false,
     sources in (Compile,doc) := Seq.empty
   )
 
@@ -52,8 +52,8 @@ lazy val root = (project in file("."))
   .aggregate(proto)
   .dependsOn(proto)
   .settings(
-    mainClass in assembly := Some("tron4s.cli.AppCli"),
-    assemblyJarName in assembly := "tron4s.jar",
+//    mainClass in assembly := Some("tron4s.cli.AppCli"),
+//    assemblyJarName in assembly := "tron4s.jar",
     inThisBuild(List(
       organization := "org.rovak",
       scalaVersion := scVersion,
@@ -66,7 +66,7 @@ lazy val root = (project in file("."))
 //      scalaTest % Test,
       specs2 % Test,
 
-      "org.scala-lang.modules" %% "scala-async" % "0.9.6",
+      "org.scala-lang.modules" %% "scala-async" % "0.9.7",
 
       // Tron
       "org.slf4j" % "slf4j-api" % "1.7.25",
@@ -103,12 +103,12 @@ lazy val root = (project in file("."))
 
       "org.bitcoinj" % "bitcoinj-core" % "0.14.7",
 
-      "com.google.inject" % "guice" % "4.2.1",
+      "com.google.inject" % "guice" % "4.2.2",
       "org.web3j" % "core" % "4.2.0",
       "com.typesafe.play" %% "play-ahc-ws-standalone" % "2.0.0-M4",
       "com.typesafe.play" %% "play-ws-standalone-json" % "2.0.0-M4",
 
-      "com.typesafe" % "config" % "1.3.2",
+      "com.typesafe" % "config" % "1.3.3",
       "de.vandermeer" % "asciitable" % "0.3.2",
 
       "com.lightbend.akka" %% "akka-stream-alpakka-csv" % "0.18",
@@ -135,29 +135,31 @@ lazy val root = (project in file("."))
     // play.sbt.routes.RoutesKeys.routesImport += "org.tronscan.binders._"
 
 
-    assemblyMergeStrategy in assembly := {
-      case PathList("META-INF", xs @ _*) =>
-        MergeStrategy.discard
-      case PathList("META-INF", "MANIFEST.MF") =>
-        MergeStrategy.discard
-      case _ =>
-        MergeStrategy.first
-    },
+//    assemblyMergeStrategy in assembly := {
+//      case PathList("META-INF", xs @ _*) =>
+//        MergeStrategy.discard
+//      case PathList("META-INF", "MANIFEST.MF") =>
+//        MergeStrategy.discard
+//      case "reference.conf" =>
+//        MergeStrategy.concat
+//      case _ =>
+//        MergeStrategy.first
+//    },
 
-    publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath + "/.m2/repository"))),
-    publishArtifact in (Compile, packageDoc) := false,
-    publishArtifact in packageDoc := false,
-    sources in (Compile,doc) := Seq.empty
+//    publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath + "/.m2/repository"))),
+//    publishArtifact in (Compile, packageDoc) := false,
+//    publishArtifact in packageDoc := false,
+//    sources in (Compile,doc) := Seq.empty
   )
 
 
 scalacOptions in Test ++= Seq("-Yrangepos")
 scalacOptions += "-Ypartial-unification"
 
-assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
+//assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
 
 // Publishing
-publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath + "/.m2/repository")))
-publishArtifact in (Compile, packageDoc) := false
-publishArtifact in packageDoc := false
+//publishTo := Some(Resolver.file("file",  new File(Path.userHome.absolutePath + "/.m2/repository")))
+//publishArtifact in (Compile, packageDoc) := false
+//publishArtifact in packageDoc := false
 sources in (Compile,doc) := Seq.empty

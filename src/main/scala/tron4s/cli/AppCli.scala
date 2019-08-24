@@ -33,7 +33,10 @@ object AppCli {
 
       cmd("send_trx")
         .action((_, c) => c.copy(cmd = Some(CreateTransferCmd(app))))
-        .text("Send a transaction")
+
+      cmd("send_trc20")
+        .action((_, c) => c.copy(cmd = Some(CreateTrc20TransferCmd(app))))
+        .text("Send a TRC20 transaction")
 
       cmd("scan_nodes")
         .action((_, c) => c.copy(cmd = Some(ScanNodesCmd(app))))
@@ -149,7 +152,6 @@ object AppCli {
 //              failure("private key is required!")
 //            }
             success
-
           }
         )
     }

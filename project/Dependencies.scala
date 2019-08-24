@@ -5,12 +5,12 @@ object Dependencies {
   val specs2 = "org.specs2" %% "specs2-core" % "4.3.4"
 
 
-  val circeVersion = "0.9.3"
+  val circeVersion = "0.10.0"
   val slickPgVersion = "0.16.3"
   val slickVersion = "3.2.3"
   val monixVersion = "2.3.0"
-  val akkaVersion = "2.5.16"
-  val catsVersion = "1.3.1"
+  val akkaVersion = "2.5.23"
+  val catsVersion = "1.6.0"
   val grpcVersion = "1.9.0"
   val scaleCubeVersion = "1.0.7"
 
@@ -28,9 +28,7 @@ object Dependencies {
 
   val akkaDeps = Seq(
     "com.typesafe.akka" %% "akka-actor",
-    "com.typesafe.akka" %% "akka-stream",
-    "com.typesafe.akka" %% "akka-cluster",
-    "com.typesafe.akka" %% "akka-cluster-tools"
+    "com.typesafe.akka" %% "akka-stream"
   ).map(_ % akkaVersion)
 
   val slickPgDeps = Seq(

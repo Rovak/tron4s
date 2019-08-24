@@ -3,6 +3,7 @@ package tron4s.cli.commands
 import akka.actor.ActorSystem
 import akka.stream.scaladsl.Sink
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
+import org.tron.protos.Tron.Block
 import play.api.Logger
 import tron4s.cli.AppCmd
 import tron4s.client.grpc.WalletClient
@@ -37,7 +38,7 @@ case class TailBlocksCmd(app: tron4s.App, producer: Option[String] = None)  exte
 
     await(
       stream
-        .runWith(Sink.foreach { block =>
+        .runWith(Sink.foreach[Block] { block =>
           println("block", block.getBlockHeader.getRawData.number)
         })
     )

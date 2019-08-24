@@ -1,7 +1,7 @@
 package tron4s.cli.commands
 
-import akka.actor.ActorSystem
-import akka.stream.scaladsl.Sink
+import akka.actor.{ActorSystem, Cancellable}
+import akka.stream.scaladsl.{Sink, Source}
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 import play.api.Logger
 import tron4s.cli.AppCmd
@@ -9,7 +9,8 @@ import tron4s.client.grpc.WalletClient
 import tron4s.importer.BlockChainStreamBuilder
 import tron4s.utils.ModelUtils
 import tron4s.Implicits._
-import tron4s.models.TransferContractModel
+import tron4s.blockchain.smartcontract.TriggerSmartContractParser
+import tron4s.models.{BaseContractModel, SmartContractTriggerModel, TransferContractModel}
 
 import scala.async.Async.{async, await}
 
@@ -31,9 +32,13 @@ case class TailTransactionsCmd(app: tron4s.App,
     implicit val materializer = ActorMaterializer(
       ActorMaterializerSettings(system).withSupervisionStrategy(decider))(system)
 
+
     val fullWallet = await(wallet.full)
 
-//    val dataExporter = new DataExporter
+    val parser = new TriggerSmartContractParser(fullWallet)
+
+
+    //    val dataExporter = new DataExporter
 
     var stream =  blockChainStreamBuilder
       .readFullNodeBlocksContinously(fullWallet)
@@ -48,13 +53,15 @@ case class TailTransactionsCmd(app: tron4s.App,
       stream = stream.filter(_.getRawData.contract.head.`type`.value == contractTypeId)
     }
 
-    var stream2 = stream
+    var stream2: Source[BaseContractModel, Cancellable] = stream
       .map(ModelUtils.contractModelFromProto).filter(_.isDefined).map(_.get)
 
     // Filter by token
     token.foreach { t =>
       stream2 = stream2.filter {
-        case x: TransferContractModel if x.token == t =>
+//        case x: TransferContractModel if x.token == t =>
+//          true
+        case _: SmartContractTriggerModel =>
           true
         case _ =>
           false
@@ -63,8 +70,13 @@ case class TailTransactionsCmd(app: tron4s.App,
 
     await {
       stream2
-        .runWith(Sink.foreach { transaction =>
-          println("transaction", transaction.contractType, transaction.toRecord.toCsv)
+        .runWith(Sink.foreach[BaseContractModel] {
+          case SmartContractTriggerModel(from, contractAddress, data) =>
+            parser.decodeInput(data, contractAddress).map { func =>
+              println(s"${from.address}, ${contractAddress.address}: ${func}")
+            }
+          case transaction =>
+            println("transaction", transaction.contractType, transaction.toRecord.toCsv)
         })
     }
   }

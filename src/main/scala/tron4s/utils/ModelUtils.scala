@@ -86,10 +86,11 @@ object ModelUtils {
           username = c.accountName.decodeString
         ))
 
-      case c: AccountUpdateContract =>
-        Some(tron4s.models.AccountUpdateModel(
-          address = Address(c.ownerAddress.encode58),
-          username = c.accountName.decodeString
+      case c: TriggerSmartContract =>
+        Some(tron4s.models.SmartContractTriggerModel(
+          ownerAddress = Address(c.ownerAddress.encode58),
+          contractAddress = Address(c.contractAddress.encode58),
+          data = c.data.toByteArray,
         ))
 
       case x =>

@@ -49,12 +49,14 @@ object Implicits {
   implicit class ByteStringUtils(byteString: ByteString) {
     def encode58 = Base58.encode58Check(byteString.toByteArray)
     def decodeString = new String(byteString.toByteArray)
+    def toHex = ByteArray.toHexString(byteString.toByteArray)
   }
 
   implicit class StringUtils(str: String) {
     def decode58 = ByteString.copyFrom(Base58.decode58Check(str))
     def toByteString = ByteString.copyFromUtf8(str)
     def toAccount = Account(address = str.decode58)
+    def toHex = str.toList.map(_.toInt.toHexString).mkString
   }
 
   implicit class StreamUtils[A](streams: List[Flow[A, A, NotUsed]]) {
