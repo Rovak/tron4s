@@ -76,13 +76,12 @@ lazy val root = (project in file("."))
       "commons-codec" % "commons-codec" % "1.11",
       "com.madgag.spongycastle" % "core" % "1.53.0.0",
       "com.madgag.spongycastle" % "prov" % "1.53.0.0",
-      "com.typesafe" % "config" % "1.3.2",
+
       "com.cedarsoftware" % "java-util" % "1.8.0",
       "org.apache.commons" % "commons-lang3" % "3.4",
       "org.apache.commons" % "commons-text" % "1.5",
       "org.apache.commons" % "commons-collections4" % "4.0",
       "com.beust" % "jcommander" % "1.72",
-      "joda-time" % "joda-time" % "2.3",
 
       // Data Access
       "com.typesafe.play" %% "play-slick" % "3.0.1",
@@ -112,6 +111,8 @@ lazy val root = (project in file("."))
       "de.vandermeer" % "asciitable" % "0.3.2",
 
       "com.lightbend.akka" %% "akka-stream-alpakka-csv" % "0.18",
+
+      "joda-time" % "joda-time" % "2.10.3",
 
       //  "com.google.code.findbugs" % "jsr305" % "3.0.0",
       //  "com.github.etaty" %% "rediscala" % "1.8.0",
@@ -154,7 +155,15 @@ lazy val root = (project in file("."))
 
 
 scalacOptions in Test ++= Seq("-Yrangepos")
-scalacOptions += "-Ypartial-unification"
+
+scalacOptions ++= Seq(
+  "-feature",
+  "-deprecation",
+  "-unchecked",
+  "-language:postfixOps",
+  "-language:higherKinds",
+  "-Ypartial-unification"
+)
 
 //assemblyOption in assembly := (assemblyOption in assembly).value.copy(includeScala = false)
 

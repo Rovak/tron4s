@@ -10,7 +10,7 @@ object Dependencies {
   val slickVersion = "3.2.3"
   val monixVersion = "2.3.0"
   val akkaVersion = "2.5.23"
-  val catsVersion = "1.6.0"
+  val catsVersion = "1.6.1"
   val grpcVersion = "1.9.0"
   val scaleCubeVersion = "1.0.7"
 
@@ -46,7 +46,7 @@ object Dependencies {
     "org.typelevel" %% "cats-core" % catsVersion,
     "org.typelevel" %% "cats-macros" % catsVersion,
     "org.typelevel" %% "cats-kernel" % catsVersion,
-    "org.typelevel" %% "cats-effect" % "1.0.0"
+    "org.typelevel" %% "cats-effect" % "1.3.1"
   )
 
   val macroParadise = addCompilerPlugin("org.scalamacros" % "paradise" % "2.1.1" cross CrossVersion.full)

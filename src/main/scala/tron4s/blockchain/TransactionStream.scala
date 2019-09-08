@@ -3,7 +3,7 @@ package tron4s.blockchain
 import akka.stream.scaladsl.Source
 import org.tron.api.api.AccountPaginated
 import org.tron.protos.Tron.Account
-import tron4s.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.WalletClient
 import tron4s.domain.Address
 import tron4s.Implicits._
 

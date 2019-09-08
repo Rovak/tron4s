@@ -62,15 +62,9 @@ class TransactionBuilder @Inject() (wallet: Wallet) {
     * Add block reference
     */
   def getBlockReference()(implicit executionContext: ExecutionContext): Future[BlockReference] = {
-    for {
-      latestBlock <- wallet.getNowBlock(EmptyMessage())
-    } yield {
-      BlockReference(
-        blockHash = ByteString.copyFrom(ByteArray.subArray(latestBlock.rawHash.getBytes, 8, 16)),
-        blockRef = ByteString.copyFrom(ByteArray.subArray(ByteArray.fromLong(latestBlock.getBlockHeader.getRawData.number), 6, 8)),
-        expiration = latestBlock.getBlockHeader.getRawData.timestamp + (60 * 5 * 1000),
-      )
-    }
+    wallet
+      .getNowBlock(EmptyMessage())
+      .map(BlockReference.fromBlock)
   }
 
   /**

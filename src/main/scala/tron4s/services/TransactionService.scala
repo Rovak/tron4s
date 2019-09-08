@@ -8,7 +8,7 @@ import javax.inject.Inject
 import org.tron.api.api.BytesMessage
 import org.tron.common.utils.ByteArray
 import org.tron.protos.Tron.Transaction
-import tron4s.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.WalletClient
 
 import scala.concurrent.duration._
 import scala.concurrent.{ExecutionContext, Future}

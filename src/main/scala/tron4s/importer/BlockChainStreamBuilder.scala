@@ -10,7 +10,7 @@ import org.tron.api.api.{BlockLimit, EmptyMessage, NumberMessage}
 import org.tron.protos.Tron.Transaction.Contract.ContractType.{AssetIssueContract, ParticipateAssetIssueContract, TransferAssetContract, TransferContract, VoteWitnessContract, WitnessCreateContract}
 import org.tron.protos.Tron.{Block, Transaction}
 import play.api.Logger
-import tron4s.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.WalletClient
 import tron4s.domain.Events._
 import tron4s.importer.StreamTypes.ContractFlow
 import tron4s.importer.db.models._

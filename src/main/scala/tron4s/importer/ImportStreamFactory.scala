@@ -7,12 +7,12 @@ import javax.inject.Inject
 import org.tron.protos.Tron.{Block, Transaction}
 import play.api.Logger
 import shapeless.PolyDefns.~>
-import tron4s.client.grpc.{FullNodeBlockChain, SolidityBlockChain, WalletClient}
-import tron4s.domain.{Address, NodeState}
+import tron4s.infrastructure.client.grpc.{FullNodeBlockChain, SolidityBlockChain, WalletClient}
+import tron4s.domain.Address
 import tron4s.importer.StreamTypes.ContractFlow
-import tron4s.services.SynchronisationService
 import tron4s.utils.StreamUtils
 import tron4s.Implicits._
+import tron4s.domain.network.NodeState
 
 import scala.async.Async._
 import scala.concurrent.{ExecutionContext, Future}

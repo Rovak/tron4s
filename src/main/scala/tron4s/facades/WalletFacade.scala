@@ -10,7 +10,7 @@ import org.tron.protos.Contract.TriggerSmartContract
 import org.tron.protos.Tron.Account
 import org.web3j.abi.{FunctionEncoder, FunctionReturnDecoder, TypeReference}
 import tron4s.Implicits._
-import tron4s.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.WalletClient
 import tron4s.domain.{Address, TokenBalance}
 
 import scala.concurrent.ExecutionContext

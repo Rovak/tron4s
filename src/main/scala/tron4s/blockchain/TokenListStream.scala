@@ -3,7 +3,7 @@ package tron4s.blockchain
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
 import org.tron.api.api.PaginatedMessage
-import tron4s.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.WalletClient
 
 import scala.concurrent.ExecutionContext
 

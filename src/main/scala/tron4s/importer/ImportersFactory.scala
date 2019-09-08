@@ -6,12 +6,11 @@ import akka.{Done, NotUsed}
 import javax.inject.Inject
 import org.tron.protos.Tron.{Block, Transaction}
 import org.tron.protos.Tron.Transaction.Contract.ContractType.{AssetIssueContract, ParticipateAssetIssueContract, TransferAssetContract, TransferContract, VoteWitnessContract, WitnessCreateContract}
-import tron4s.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.WalletClient
 import tron4s.domain.Address
 import tron4s.importer.StreamTypes.ContractFlow
 import tron4s.importer.db.models.MaintenanceRoundModelRepository
 import tron4s.Implicits._
-import tron4s.services.SynchronisationService
 
 import scala.async.Async._
 import scala.concurrent.{ExecutionContext, Future}

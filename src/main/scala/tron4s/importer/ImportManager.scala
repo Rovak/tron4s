@@ -7,7 +7,7 @@ import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 import javax.inject.Inject
 import play.api.Logger
 import play.api.inject.ConfigurationProvider
-import tron4s.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.WalletClient
 
 import scala.concurrent.Future
 import scala.concurrent.duration._

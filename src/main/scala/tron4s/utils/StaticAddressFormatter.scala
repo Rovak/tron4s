@@ -9,7 +9,6 @@ trait AddressFormatter {
   def prefixString: String
 }
 
-
 class TestNetFormatter extends AddressFormatter {
   val prefixByte = 0xa0.toByte
   val prefixString = "a0"

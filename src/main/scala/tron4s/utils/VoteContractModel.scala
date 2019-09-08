@@ -1,7 +1,8 @@
 package tron4s.utils
 
 import org.tron.protos.Tron.Transaction.Contract.ContractType
-import tron4s.models.{BaseContractModel, HasDataRecord}
+import tron4s.infrastructure.exporter.{Field, Record}
+import tron4s.models.BaseContractModel
 
 case class VoteContractModel(
    ownerAddress: String,

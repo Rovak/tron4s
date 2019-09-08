@@ -14,7 +14,7 @@ import org.tron.protos.Tron.{Account, Block, Transaction}
 import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
 import play.api.libs.json.{JsObject, JsValue, Json => PlayJson}
 import play.api.mvc.Codec
-import tron4s.protocol.ProtocolUtils
+import tron4s.utils.ProtocolUtils
 
 import scala.annotation.compileTimeOnly
 import scala.concurrent.duration.{Duration, _}

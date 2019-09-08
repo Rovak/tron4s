@@ -5,10 +5,9 @@ import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
 import akka.{Done, NotUsed}
 import javax.inject.Inject
 import play.api.Logger
-import tron4s.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.WalletClient
 import tron4s.domain.Address
 import tron4s.importer.db.models.AccountModelRepository
-import tron4s.services.AccountService
 import tron4s.utils.FutureUtils
 
 import scala.concurrent.duration._

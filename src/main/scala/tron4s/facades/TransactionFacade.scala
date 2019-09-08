@@ -16,7 +16,7 @@ import org.web3j.abi.FunctionEncoder
 import org.web3j.abi.datatypes.Address
 import org.web3j.abi.datatypes.generated.{Int256, Uint256}
 import tron4s.Implicits._
-import tron4s.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.WalletClient
 import tron4s.domain.PrivateKey
 import tron4s.models.{TransactionException, TransactionResult}
 import tron4s.services.TransactionBuilder

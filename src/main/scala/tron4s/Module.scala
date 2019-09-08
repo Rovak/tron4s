@@ -1,32 +1,20 @@
 package tron4s
 
-import java.net.URI
-
-import akka.actor.{Actor, ActorRef, ActorSystem, Props}
+import akka.actor.{ActorRef, ActorSystem, Props}
 import akka.stream.ActorMaterializer
-import com.google.inject.name.{Named, Names}
-import com.google.inject.util.Providers
-import com.google.inject.{AbstractModule, Injector, Provider, Provides}
+import com.google.inject.name.Named
+import com.google.inject.{AbstractModule, Provides}
 import com.typesafe.config.{Config, ConfigFactory}
 import io.grpc.ManagedChannelBuilder
 import javax.inject.{Inject, Singleton}
-import org.tron.api.api.WalletGrpc.Wallet
 import org.tron.api.api.{WalletGrpc, WalletSolidityGrpc}
-import org.tron.api.api.WalletSolidityGrpc.WalletSolidity
 import play.api.db.slick.DatabaseConfigProvider
-import play.api.inject.ConfigurationProvider
-import play.api.libs.concurrent.{Akka, DefaultFutures}
-import tron4s.client.grpc.GrpcBalancer
-import tron4s.grpc.GrpcPool
-import tron4s.importer.ImportManager
+import play.api.libs.concurrent.DefaultFutures
 import play.api.libs.ws.StandaloneWSClient
 import play.api.libs.ws.ahc.StandaloneAhcWSClient
 import slick.basic.{BasicProfile, DatabaseConfig}
-import slick.jdbc.PostgresProfile
-import tron4s.importer.db.PgProfile
-
-import scala.concurrent.java8.FuturesConvertersImpl.P
-import scala.reflect.ClassTag
+import tron4s.infrastructure.client.grpc.GrpcBalancer
+import tron4s.infrastructure.grpc.GrpcPool
 //
 //
 //class AkkaProvider[T] @Inject() (injector: Injector, name: String) extends Provider[ActorRef] {

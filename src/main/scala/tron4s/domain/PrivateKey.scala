@@ -1,9 +1,7 @@
 package tron4s.domain
 
-import com.google.protobuf.ByteString
 import org.tron.common.crypto.ECKey
 import org.tron.common.utils.{Base58, ByteArray}
-import play.api.libs.json.Json
 
 object PrivateKey {
   def apply(key: String): PrivateKey = PrivateKey(ByteArray.fromHexString(key))
@@ -18,7 +16,6 @@ object PrivateKey {
   */
 case class PrivateKey(keyBytes: Array[Byte]) {
   require(keyBytes.length == 32,  "Key must be 32 bytes")
-
 
   /**
     * Private key

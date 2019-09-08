@@ -6,4 +6,5 @@ import org.tron.protos.Tron.Transaction
 case class TransactionResult(
   transaction: Transaction,
   code: response_code,
-  message: String)
+  message: String
+)

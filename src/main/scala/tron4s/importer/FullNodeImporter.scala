@@ -4,8 +4,7 @@ import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Keep, Source}
 import javax.inject.Inject
 import monix.execution.Scheduler.Implicits.global
-import tron4s.client.grpc.WalletClient
-import tron4s.services.SynchronisationService
+import tron4s.infrastructure.client.grpc.WalletClient
 
 import scala.async.Async._
 
