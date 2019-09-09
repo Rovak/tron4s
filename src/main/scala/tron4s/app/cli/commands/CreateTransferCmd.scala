@@ -34,6 +34,7 @@ case class CreateTransferCmd(app: tron4s.app.App) extends Command {
           toAddress = to.toByteString,
           amount = amount
         )
+
         val contract = Transaction.Contract(
           `type` = ContractType.TransferContract,
           parameter = Some(Any.pack(transferContract.asInstanceOf[TransferContract])))

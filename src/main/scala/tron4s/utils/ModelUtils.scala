@@ -188,24 +188,6 @@ object ModelUtils {
           description = c.description.decodeString,
           url = c.url.decodeString))
 
-//      case c: AccountCreateContract =>
-//        c.ownerAddress.encode58
-//      case c: DeployContract =>
-//        c.ownerAddress.encode58
-//      case c: VoteAssetContract =>
-//        c.ownerAddress.encode58
-//      case c: FreezeBalanceContract =>
-//        c.ownerAddress.encode58
-//      case c: UnfreezeBalanceContract =>
-//        c.ownerAddress.encode58
-//      case c: AccountUpdateContract =>
-//        c.ownerAddress.encode58
-//      case c: WithdrawBalanceContract =>
-//        c.ownerAddress.encode58
-//      case c: UnfreezeAssetContract =>
-//        c.ownerAddress.encode58
-//      case c: UpdateAssetContract =>
-//        c.ownerAddress.encode58
       case _ =>
         None
     }

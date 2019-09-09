@@ -18,5 +18,5 @@ object Block {
 case class Block(
   number: BlockNumber,
   timestamp: Option[Timestamp] = None,
-  transactions: List[Transaction] = List.empty,
+  transactions: List[Transaction[_]] = List.empty,
 )
