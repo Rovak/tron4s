@@ -8,9 +8,9 @@ import org.tron.protos.Tron.Transaction
 import play.api.Logger
 import tron4s.blockchain.TransactionStream
 import tron4s.app.cli.AppCmd
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 import tron4s.domain.Address
-import tron4s.services.DataExporter
+import tron4s.exporter.DataExporter
 import tron4s.utils.ModelUtils
 
 import scala.async.Async.{async, await}
@@ -39,7 +39,7 @@ case class ListTransactionsCmd(app: tron4s.app.App, format: String = "csv", from
   }
 
   def buildStream: Source[Transaction, NotUsed] = {
-    val wallet = app.injector.getInstance(classOf[WalletClient])
+    val wallet = app.injector.getInstance(classOf[GrpcWalletClient])
 
     fromAddress.map { from =>
       new TransactionStream(wallet).streamFromThis(Address(from))

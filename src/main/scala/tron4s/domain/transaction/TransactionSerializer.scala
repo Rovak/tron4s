@@ -1,4 +1,4 @@
-package tron4s.utils
+package tron4s.domain.transaction
 
 import io.circe.syntax._
 import io.circe.{Decoder, Encoder, HCursor, Json => Js}
@@ -9,8 +9,6 @@ import org.tron.protos.Tron.{AccountType, Transaction}
 import tron4s.Implicits._
 
 object TransactionSerializer {
-
-  implicit val addressFormatter = new MainNetFormatter
 
   implicit val encodeAssetIssueContract = new Encoder[org.tron.protos.Contract.AssetIssueContract] {
     def apply(assetIssueContract: org.tron.protos.Contract.AssetIssueContract): Js = Js.obj(

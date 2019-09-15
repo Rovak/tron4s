@@ -1,4 +1,4 @@
-package tron4s.facades
+package tron4s.domain.wallet
 
 import java.math.BigInteger
 import java.util
@@ -10,18 +10,26 @@ import org.tron.protos.Contract.TriggerSmartContract
 import org.tron.protos.Tron.Account
 import org.web3j.abi.{FunctionEncoder, FunctionReturnDecoder, TypeReference}
 import tron4s.Implicits._
-import tron4s.infrastructure.client.grpc.WalletClient
-import tron4s.domain.{Address, TokenBalance}
+import tron4s.domain.Address
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 
 import scala.concurrent.ExecutionContext
 
-class WalletFacade @Inject() (
-  walletClient: WalletClient) {
+class WalletBalanceReader @Inject() (
+  walletClient: GrpcWalletClient) {
+
+  /**
+    * Amount for a specific token
+    * @param name name of the token
+    * @param balance balance of the token
+    */
+  case class TokenBalance(name: String, balance: Long)
+
 
   /**
     * Receive the TRX balance for the given address
     */
-  def getBalance(address: Address)(implicit executionContext: ExecutionContext) = {
+  def getTrxBalance(address: Address)(implicit executionContext: ExecutionContext) = {
     for {
       fullNode <- walletClient.full
       account <- fullNode.getAccount(Account(address = address.address.decode58))
@@ -31,7 +39,7 @@ class WalletFacade @Inject() (
   /**
     * Receive the TRX balance for the given address
     */
-  def getTokenBalances(address: Address)(implicit executionContext: ExecutionContext) = {
+  def getTRC10Balance(address: Address)(implicit executionContext: ExecutionContext) = {
     for {
       fullNode <- walletClient.full
       account <- fullNode.getAccount(Account(address = address.address.decode58))
@@ -41,7 +49,7 @@ class WalletFacade @Inject() (
   /**
     * Retrieve TRC20 token balance for the given wallet and contract
     */
-  def getTRC20Balance(walletAddress: Address, contractAddress: Address, decimals: Int = 0)(implicit executionContext: ExecutionContext) = {
+  def getTRC20Balance(walletAddress: Address, contractAddress: Address)(implicit executionContext: ExecutionContext) = {
 
     val balanceOfFunc = new org.web3j.abi.datatypes.Function(
       "balanceOf",

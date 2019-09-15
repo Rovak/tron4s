@@ -10,8 +10,8 @@ import org.tron.api.api.{BlockLimit, EmptyMessage, NumberMessage}
 import org.tron.protos.Tron.Transaction.Contract.ContractType.{AssetIssueContract, ParticipateAssetIssueContract, TransferAssetContract, TransferContract, VoteWitnessContract, WitnessCreateContract}
 import org.tron.protos.Tron.{Block, Transaction}
 import play.api.Logger
-import tron4s.infrastructure.client.grpc.WalletClient
-import tron4s.domain.Events._
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
+import Events._
 import tron4s.importer.StreamTypes.ContractFlow
 import tron4s.importer.db.models._
 import tron4s.utils.ModelUtils
@@ -51,7 +51,7 @@ class BlockChainStreamBuilder {
   /**
     * Reads all the blocks using batch calls
     */
-  def readFullNodeBlocksBatched(from: Long, to: Long, batchSize: Int = 50)(client: WalletClient)(implicit executionContext: ExecutionContext): Source[Block, NotUsed] = {
+  def readFullNodeBlocksBatched(from: Long, to: Long, batchSize: Int = 50)(client: GrpcWalletClient)(implicit executionContext: ExecutionContext): Source[Block, NotUsed] = {
     Source.unfold(from) { fromBlock =>
       if (fromBlock < to) {
 

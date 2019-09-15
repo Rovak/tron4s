@@ -1,4 +1,4 @@
-package tron4s.services
+package tron4s.domain.transaction
 
 import com.google.protobuf.ByteString
 import com.google.protobuf.any.Any
@@ -6,7 +6,7 @@ import javax.inject.Inject
 import org.joda.time.DateTime
 import org.tron.api.api.EmptyMessage
 import org.tron.api.api.WalletGrpc.Wallet
-import org.tron.common.utils.{ByteArray, Sha256Hash}
+import org.tron.common.utils.Sha256Hash
 import org.tron.protos.Contract.TransferContract
 import org.tron.protos.Tron.Transaction
 import org.tron.protos.Tron.Transaction.Contract.ContractType

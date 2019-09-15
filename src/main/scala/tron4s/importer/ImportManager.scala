@@ -7,7 +7,7 @@ import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 import javax.inject.Inject
 import play.api.Logger
 import play.api.inject.ConfigurationProvider
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 
 import scala.concurrent.Future
 import scala.concurrent.duration._
@@ -22,12 +22,12 @@ object ImportManager {
   * Handles the Full and Solidity Import
   */
 class ImportManager @Inject() (
-  configurationProvider: ConfigurationProvider,
-  fullNodeImporter: FullNodeImporter,
-  solidityNodeImporter: SolidityNodeImporter,
-  walletClient: WalletClient,
-  voteRoundImporter: VoteRoundImporter,
-  accountImporter: AccountImporter) extends Actor {
+                                configurationProvider: ConfigurationProvider,
+                                fullNodeImporter: FullNodeImporter,
+                                solidityNodeImporter: SolidityNodeImporter,
+                                walletClient: GrpcWalletClient,
+                                voteRoundImporter: VoteRoundImporter,
+                                accountImporter: AccountImporter) extends Actor {
 
   val config = configurationProvider.get
 

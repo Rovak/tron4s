@@ -5,7 +5,7 @@ import javax.inject.Inject
 import org.joda.time.DateTime
 import tron4s.Implicits._
 import tron4s.importer.db.models.{AccountModel, AccountModelRepository, AddressBalanceModelRepository}
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 
 import scala.async.Async._
 import scala.concurrent.ExecutionContext
@@ -17,7 +17,7 @@ class AccountService @Inject()(
   /**
     * Synchronize the address from the node
     */
-  def syncAddress(address: String, walletClient: WalletClient)(implicit executionContext: ExecutionContext) = async {
+  def syncAddress(address: String, walletClient: GrpcWalletClient)(implicit executionContext: ExecutionContext) = async {
 
     val account = await(walletClient.fullRequest(_.getAccount(address.toAccount)))
 

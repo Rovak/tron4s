@@ -2,7 +2,7 @@ package tron4s.app.cli.commands
 
 import org.tron.protos.Tron.Account
 import tron4s.app.cli.AppCmd
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 import tron4s.Implicits._
 import tron4s.infrastructure.exporter.RecordFormatter
 import tron4s.models.AccountModel
@@ -18,7 +18,7 @@ case class ShowAccountCmd(app: tron4s.app.App, account: String, node: String = "
 
   def execute(args: AppCmd) = async {
 
-    val client = app.injector.getInstance(classOf[WalletClient])
+    val client = app.injector.getInstance(classOf[GrpcWalletClient])
 
     node.toLowerCase match {
       case "full" =>

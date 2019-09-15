@@ -1,4 +1,4 @@
-package tron4s.facades
+package tron4s.domain.transaction
 
 import java.math.BigInteger
 import java.util
@@ -16,10 +16,9 @@ import org.web3j.abi.FunctionEncoder
 import org.web3j.abi.datatypes.Address
 import org.web3j.abi.datatypes.generated.{Int256, Uint256}
 import tron4s.Implicits._
-import tron4s.infrastructure.client.grpc.WalletClient
 import tron4s.domain.PrivateKey
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 import tron4s.models.{TransactionException, TransactionResult}
-import tron4s.services.TransactionBuilder
 import tron4s.utils.FutureUtils._
 
 import scala.async.Async._
@@ -33,7 +32,7 @@ case class TransactionRetries(retries: Int = 0, confirmations: Int = 0) {
 
 class TransactionFacade @Inject() (
   transactionBuilder: TransactionBuilder,
-  walletClient: WalletClient) {
+  walletClient: GrpcWalletClient) {
 
   def confirmTransaction(wallet: WalletGrpc.Wallet, transaction: Transaction, confirmations: Int = 1)(implicit executionContext: Scheduler): Future[Either[String, Boolean]] = async {
     await(wallet.getTransactionInfoById(BytesMessage(ByteString.copyFrom(transaction.hashBytes)))) match {

@@ -5,7 +5,7 @@ import akka.stream.scaladsl.{Sink, Source}
 import akka.stream.{ActorMaterializer, ActorMaterializerSettings, Supervision}
 import play.api.Logger
 import tron4s.app.cli.AppCmd
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 import tron4s.importer.BlockChainStreamBuilder
 import tron4s.utils.ModelUtils
 import tron4s.Implicits._
@@ -28,7 +28,7 @@ case class TailTransactionsCmd(
     }
 
     val blockChainStreamBuilder = app.injector.getInstance(classOf[BlockChainStreamBuilder])
-    val wallet = app.injector.getInstance(classOf[WalletClient])
+    val wallet = app.injector.getInstance(classOf[GrpcWalletClient])
     implicit val system = app.injector.getInstance(classOf[ActorSystem])
     implicit val materializer = ActorMaterializer(
       ActorMaterializerSettings(system).withSupervisionStrategy(decider))(system)

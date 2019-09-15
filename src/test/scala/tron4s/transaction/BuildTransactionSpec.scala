@@ -20,7 +20,7 @@ object BuildTransactionSpec extends Specification {
         )
       )
 
-      val contract = TransactionFactory.toTransaction(transaction.contract)
+      TransactionFactory.toTransaction(transaction.contract)
 
       ok
     }

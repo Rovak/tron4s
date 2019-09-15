@@ -8,9 +8,8 @@ import org.tron.protos.Tron.Transaction
 import org.tron.protos.Tron.Transaction.Contract.ContractType
 import tron4s.Implicits._
 import tron4s.app.cli.AppCmd
+import tron4s.domain.transaction.{TransactionBuilder, TransactionFacade, TransactionRetries, TransactionVerifier}
 import tron4s.domain.{Address, PrivateKey}
-import tron4s.facades.{TransactionFacade, TransactionRetries}
-import tron4s.services.{TransactionBuilder, TransactionService}
 
 import scala.async.Async._
 
@@ -57,7 +56,7 @@ case class CreateTransferCmd(app: tron4s.app.App) extends Command {
           await(transactionFacade.broadcastWithRetries(walletClient, transaction, TransactionRetries(6, 6)))
           write(s"Successfully sent $amount TRX from $addressStr to $to\nHash: ${transaction.hash}")
 
-          val transactionService = app.injector.getInstance(classOf[TransactionService])
+          val transactionService = app.injector.getInstance(classOf[TransactionVerifier])
           write(s"Waiting for confirmation...")
 
           await(transactionService.confirmHash(transaction.hash))

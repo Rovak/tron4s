@@ -8,7 +8,7 @@ import play.api.Logger
 import tron4s.importer.db.models.{MaintenanceRoundModelRepository, RoundVoteModelRepository}
 import tron4s.Implicits._
 import scala.concurrent.ExecutionContext
-import tron4s.utils.TransactionSerializer._
+import tron4s.domain.transaction.TransactionSerializer._
 
 class VoteRoundImporter @Inject() (
   maintenanceRepository: MaintenanceRoundModelRepository,

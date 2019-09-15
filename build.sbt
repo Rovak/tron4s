@@ -93,11 +93,9 @@ lazy val root = (project in file("."))
 
       "org.ocpsoft.prettytime" % "prettytime" % "4.0.1.Final",
 
-
       "com.github.scopt" %% "scopt" % "3.7.0",
 
       "io.github.novacrypto" % "BIP39" % "0.1.9",
-
       "io.github.novacrypto" % "BIP32" % "0.0.9",
 
       "org.bitcoinj" % "bitcoinj-core" % "0.14.7",

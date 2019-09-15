@@ -1,7 +1,6 @@
-package tron4s.domain
+package tron4s.importer
 
 import tron4s.importer.db.models._
-
 
 object Events {
 

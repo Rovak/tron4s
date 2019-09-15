@@ -8,6 +8,7 @@ import org.tron.protos.Tron.{Block, Transaction}
 import tron4s.importer.db.models
 import tron4s.Implicits._
 import tron4s.domain.Address
+import tron4s.domain.transaction.TransactionSerializer
 import tron4s.importer.db.models._
 import tron4s.models.{BaseContractModel, TokenModel}
 

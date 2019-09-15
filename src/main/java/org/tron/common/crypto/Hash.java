@@ -20,7 +20,6 @@ package org.tron.common.crypto;
 
 import org.tron.common.crypto.cryptohash.Keccak256;
 import org.tron.common.crypto.cryptohash.Keccak512;
-import tron4s.utils.StaticAddressFormatter;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
@@ -93,7 +92,7 @@ public class Hash {
   public static byte[] sha3omit12(byte[] input) {
     byte[] hash = sha3(input);
     byte[] address = copyOfRange(hash, 11, hash.length);
-    address[0] = StaticAddressFormatter.formatter().prefixByte();
+    address[0] = 0x41;
     return address;
   }
 }

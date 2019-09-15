@@ -4,7 +4,9 @@ import org.tron.common.crypto.ECKey
 import org.tron.common.utils.{Base58, ByteArray}
 
 object PrivateKey {
-  def apply(key: String): PrivateKey = PrivateKey(ByteArray.fromHexString(key))
+  def apply(key: String): PrivateKey = {
+    PrivateKey(ByteArray.fromHexString(key))
+  }
 
   def create = {
     PrivateKey(new ECKey().getPrivKeyBytes)
@@ -15,7 +17,6 @@ object PrivateKey {
   * Private Key
   */
 case class PrivateKey(keyBytes: Array[Byte]) {
-  require(keyBytes.length == 32,  "Key must be 32 bytes")
 
   /**
     * Private key

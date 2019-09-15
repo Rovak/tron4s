@@ -13,9 +13,9 @@ import org.tron.protos.Tron.Transaction
 import org.tron.protos.Tron.Transaction.Contract.ContractType
 import tron4s.Implicits._
 import tron4s.app.cli.AppCmd
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 import tron4s.domain.PrivateKey
-import tron4s.services.TransactionBuilder
+import tron4s.domain.transaction.TransactionBuilder
 
 import scala.async.Async._
 
@@ -27,7 +27,7 @@ case class BatchTransactionsCmd(app: tron4s.app.App, pk: Option[String] = None, 
 
   def execute(args: AppCmd) = async {
 
-    val client = app.injector.getInstance(classOf[WalletClient])
+    val client = app.injector.getInstance(classOf[GrpcWalletClient])
     implicit val system = app.injector.getInstance(classOf[ActorSystem])
     implicit val materializer = ActorMaterializer()
 

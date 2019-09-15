@@ -6,7 +6,7 @@ import akka.{Done, NotUsed}
 import javax.inject.Inject
 import org.tron.protos.Tron.{Block, Transaction}
 import org.tron.protos.Tron.Transaction.Contract.ContractType.{AssetIssueContract, ParticipateAssetIssueContract, TransferAssetContract, TransferContract, VoteWitnessContract, WitnessCreateContract}
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 import tron4s.domain.Address
 import tron4s.importer.StreamTypes.ContractFlow
 import tron4s.importer.db.models.MaintenanceRoundModelRepository
@@ -16,12 +16,12 @@ import scala.async.Async._
 import scala.concurrent.{ExecutionContext, Future}
 
 class ImportersFactory @Inject() (
-  syncService: SynchronisationService,
-  blockChainBuilder: BlockChainStreamBuilder,
-  accountImporter: AccountImporter,
-  walletClient: WalletClient,
-  maintenanceRoundModelRepository: MaintenanceRoundModelRepository,
-  blockImporter: BlockImporter) {
+                                   syncService: SynchronisationService,
+                                   blockChainBuilder: BlockChainStreamBuilder,
+                                   accountImporter: AccountImporter,
+                                   walletClient: GrpcWalletClient,
+                                   maintenanceRoundModelRepository: MaintenanceRoundModelRepository,
+                                   blockImporter: BlockImporter) {
 
   /**
     * Build importers for Full Node

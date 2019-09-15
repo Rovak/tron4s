@@ -5,16 +5,16 @@ import org.tron.api.api.{EmptyMessage, NumberMessage}
 import tron4s.Implicits._
 import tron4s.domain.network.NodeState
 import tron4s.importer.db.models.{AccountModelRepository, AddressBalanceModelRepository, BlockModelRepository}
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 
 class SynchronisationService @Inject() (
-  walletClient: WalletClient,
-  blockModelRepository: BlockModelRepository,
-  accountModelRepository: AccountModelRepository,
-  addressBalanceModelRepository: AddressBalanceModelRepository) {
+                                         walletClient: GrpcWalletClient,
+                                         blockModelRepository: BlockModelRepository,
+                                         accountModelRepository: AccountModelRepository,
+                                         addressBalanceModelRepository: AddressBalanceModelRepository) {
 
   val syncSolidity = false //configurationProvider.get.get[Boolean]("sync.solidity")
 

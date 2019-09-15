@@ -5,7 +5,7 @@ import akka.stream.scaladsl.{Flow, Keep, Sink, Source}
 import akka.{Done, NotUsed}
 import javax.inject.Inject
 import play.api.Logger
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 import tron4s.domain.Address
 import tron4s.importer.db.models.AccountModelRepository
 import tron4s.utils.FutureUtils
@@ -41,7 +41,7 @@ class AccountImporter @Inject() (
     *
     * @param parallel how many threads should be used
     */
-  def buildAddressSynchronizerFlow(walletClient: WalletClient, parallel: Int = 8)(implicit scheduler: Scheduler, executionContext: ExecutionContext): Sink[Address, Future[Done]] = {
+  def buildAddressSynchronizerFlow(walletClient: GrpcWalletClient, parallel: Int = 8)(implicit scheduler: Scheduler, executionContext: ExecutionContext): Sink[Address, Future[Done]] = {
     Flow[Address]
       .mapAsyncUnordered(parallel) { address =>
         Logger.info("Syncing Address: " + address)

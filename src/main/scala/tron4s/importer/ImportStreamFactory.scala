@@ -7,7 +7,7 @@ import javax.inject.Inject
 import org.tron.protos.Tron.{Block, Transaction}
 import play.api.Logger
 import shapeless.PolyDefns.~>
-import tron4s.infrastructure.client.grpc.{FullNodeBlockChain, SolidityBlockChain, WalletClient}
+import tron4s.infrastructure.client.grpc.{FullNodeBlockChain, SolidityBlockChain, GrpcWalletClient}
 import tron4s.domain.Address
 import tron4s.importer.StreamTypes.ContractFlow
 import tron4s.utils.StreamUtils
@@ -218,7 +218,7 @@ class ImportStreamFactory @Inject()(
   /**
     * Build a stream of blocks from a solidity node
     */
-  def buildBlockSource(walletClient: WalletClient)(implicit context: ExecutionContext) = {
+  def buildBlockSource(walletClient: GrpcWalletClient)(implicit context: ExecutionContext) = {
     Flow[NodeState]
       .mapAsync(1) { status =>
         println("reading wallet")
@@ -240,7 +240,7 @@ class ImportStreamFactory @Inject()(
   /**
     * Build a stream of solidity blocks
     */
-  def buildSolidityBlockSource(walletClient: WalletClient)(implicit context: ExecutionContext) = {
+  def buildSolidityBlockSource(walletClient: GrpcWalletClient)(implicit context: ExecutionContext) = {
     Flow[NodeState]
       .mapAsync(1) { status =>
         walletClient.solidity.map { walletSolidity =>

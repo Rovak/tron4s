@@ -4,7 +4,7 @@ import akka.actor.ActorSystem
 import akka.stream.scaladsl.{Keep, Source}
 import javax.inject.Inject
 import monix.execution.Scheduler.Implicits.global
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 
 import scala.async.Async._
 
@@ -15,7 +15,7 @@ class FullNodeImporter @Inject()(
   importersFactory: ImportersFactory,
   importStreamFactory: ImportStreamFactory,
   synchronisationService: SynchronisationService,
-  walletClient: WalletClient) {
+  walletClient: GrpcWalletClient) {
 
   /**
     * Builds the stream

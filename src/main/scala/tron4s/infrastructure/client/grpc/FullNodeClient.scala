@@ -3,7 +3,7 @@ package tron4s.infrastructure.client.grpc
 import org.tron.api.api.WalletGrpc.WalletStub
 import org.tron.api.api.{EmptyMessage, NumberMessage}
 import org.tron.protos.Tron.Block
-import tron4s.domain.BlockChain
+import tron4s.domain.blockchain.BlockChain
 
 import scala.concurrent.{ExecutionContext, Future}
 

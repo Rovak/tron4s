@@ -3,11 +3,11 @@ package tron4s.blockchain
 import akka.stream.OverflowStrategy
 import akka.stream.scaladsl.Source
 import org.tron.api.api.PaginatedMessage
-import tron4s.infrastructure.client.grpc.WalletClient
+import tron4s.infrastructure.client.grpc.GrpcWalletClient
 
 import scala.concurrent.ExecutionContext
 
-class TokenListStream(walletClient: WalletClient) {
+class TokenListStream(walletClient: GrpcWalletClient) {
 
   def buildStream(implicit executionContext: ExecutionContext) = {
     val pageSize = 100

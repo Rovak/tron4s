@@ -8,12 +8,12 @@ import monix.eval.Task
 import monix.execution.Scheduler
 import org.joda.time.DateTime
 import org.joda.time.format.DateTimeFormat
-import org.tron.common.BlockId
 import org.tron.common.utils.{Base58, ByteArray, Sha256Hash}
 import org.tron.protos.Tron.{Account, Block, Transaction}
 import play.api.http.{ContentTypeOf, ContentTypes, Writeable}
 import play.api.libs.json.{JsObject, JsValue, Json => PlayJson}
 import play.api.mvc.Codec
+import tron4s.blockchain.BlockId
 import tron4s.utils.ProtocolUtils
 
 import scala.annotation.compileTimeOnly
